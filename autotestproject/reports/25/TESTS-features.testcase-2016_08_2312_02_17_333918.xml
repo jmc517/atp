@@ -1,0 +1,66 @@
+<testsuite errors="1" failures="0" name="features.testcase-2016_08_2312_02_17_333918.收听网络电台" skipped="0" tests="1" time="23.241535"><testcase classname="features.testcase-2016_08_2312_02_17_333918.收听网络电台" name="收听网络电台" status="failed" time="23.241535"><error message="No option 'socketip' in section: 'baseconf'" type="NoOptionError">
+<![CDATA[
+Failing step: 那么 < 验证蜻蜓FM是否被收藏 ... failed in 11.376s
+  | chk_qt_title | chk_is_faved |
+  | o_title      | true         |
+Location: features/testcase-2016_08_2312_02_17_333918.feature:14
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.4/configparser.py", line 761, in get
+    value = d[option]
+  File "/usr/local/lib/python3.4/collections/__init__.py", line 805, in __getitem__
+    return self.__missing__(key)            # support subclasses that define __missing__
+  File "/usr/local/lib/python3.4/collections/__init__.py", line 797, in __missing__
+    raise KeyError(key)
+KeyError: 'socketip'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.4/site-packages/behave/model.py", line 1456, in run
+    match.run(runner.context)
+  File "/usr/local/lib/python3.4/site-packages/behave/model.py", line 1903, in run
+    self.func(context, *args, **kwargs)
+  File "steps/step_radio.py", line 244, in step_impl
+    Radio().click_radio_qt_collected_ele()
+  File "/home/ogq/pateo/AT/ATP/autotestproject/actions/radio.py", line 479, in click_radio_qt_collected_ele
+    Utils().raise_Exception_info('蜻蜓FM我的收藏控件不存在')
+  File "/home/ogq/pateo/AT/ATP/autotestproject/utils/utils.py", line 104, in raise_Exception_info
+    raise Exception('用例运行失败，' + err_msg + '请参考截图信息: http://' + self.get_conf_value('socketIp') + ':9000/' + time.strftime('%Y%m%d') + '/screenshots/' + png_name)
+  File "/home/ogq/pateo/AT/ATP/autotestproject/utils/utils.py", line 175, in get_conf_value
+    ret_val = cf.get('baseconf', key)
+  File "/usr/local/lib/python3.4/configparser.py", line 764, in get
+    raise NoOptionError(option, section)
+configparser.NoOptionError: No option 'socketip' in section: 'baseconf'
+
+Captured stdout:
+/home/ogq/pateo/AT/autotestLog/20160823/screenshots/20160823120742.png
+开始检查应用是否crash
+]]>
+</error><system-out>
+<![CDATA[
+@scenario.begin
+
+  @baseScen
+  场景: 收听网络电台
+    当 < 打开收音机应用 ... passed in 0.528s
+    当 < 打开蜻蜓FM ... passed in 0.723s
+    当 < 随机播放蜻蜓FM栏目 ... passed in 6.808s
+      | o_result   |
+      | o_programe |
+    当 < 随机播放蜻蜓FM节目 ... passed in 3.578s
+      | o_result |
+      | o_title  |
+    当 < 收藏或取消蜻蜓FM电台 ... passed in 0.228s
+    那么 < 验证蜻蜓FM是否被收藏 ... failed in 11.376s
+      | chk_qt_title | chk_is_faved |
+      | o_title      | true         |
+
+@scenario.end
+--------------------------------------------------------------------------------
+
+Captured stdout:
+/home/ogq/pateo/AT/autotestLog/20160823/screenshots/20160823120742.png
+开始检查应用是否crash
+
+]]>
+</system-out></testcase></testsuite>

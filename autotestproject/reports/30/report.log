@@ -1,0 +1,12 @@
+功能: 测试用例-验证本地FM播放正常 # features/testcase-2016_08_2413_46_18_321019.feature:2
+
+  场景: 测试用例-验证本地FM播放正常  # features/testcase-2016_08_2413_46_18_321019.feature:3
+    当 < 打开收音机应用        # steps/step_launcher.py:14
+    当 < 打开FM_AM选择界面    # steps/step_radio.py:10
+    当 < 播放指定FM节目       # steps/step_radio.py:15
+      | fm_no |
+      | 97.5  |
+    那么 < 验证播放的FM编号一致   # steps/step_radio.py:21
+      | chk_fm_no |
+      | 97.5      |
+

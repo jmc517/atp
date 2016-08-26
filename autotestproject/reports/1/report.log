@@ -1,0 +1,31 @@
+功能: 播放本地指定音乐并验证播放状态 # features/testcase-2016_08_2515_02_07_003177.feature:2
+
+  场景: 播放本地指定音乐并验证播放状态  # features/testcase-2016_08_2515_02_07_003177.feature:3
+    当 < 打开音乐应用         # steps/step_launcher.py:10
+    当 < 打开我的音乐库        # None
+    当 < 播放本地指定音乐       # None
+      | music_name |
+      | 小城故事       |
+    那么 < 验证音乐名称一致      # None
+      | chk_music_name |
+      | 小城故事           |
+    那么 < 验证歌手名字一致      # None
+      | chk_artist |
+      | 邓丽君        |
+    那么 < 验证音乐是否播放      # None
+      | is_playing |
+      | true       |
+
+功能: 暂停音乐并验证播放状态暂停 # features/testcase-2016_08_2515_02_07_047703.feature:2
+
+  场景: 暂停音乐并验证播放状态暂停  # features/testcase-2016_08_2515_02_07_047703.feature:3
+    当 < 打开音乐应用       # steps/step_launcher.py:10
+    当 < 打开我的音乐库      # None
+    当 < 播放本地指定音乐     # None
+      | music_name |
+      | 小城故事       |
+    当 < 播放或暂停音乐      # None
+    那么 < 验证音乐是否播放    # None
+      | is_playing |
+      | false      |
+
