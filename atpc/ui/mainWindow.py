@@ -9,10 +9,12 @@ from PyQt5.QtGui import QFont
 from PyQt5.QtGui import QIcon
 from PyQt5.QtGui import QPalette
 from PyQt5.QtWidgets import QAbstractItemView
+from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QCheckBox
 from PyQt5.QtWidgets import QGridLayout
 from PyQt5.QtWidgets import QInputDialog
 from PyQt5.QtWidgets import QLabel
+from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtWidgets import QMenuBar
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtWidgets import QLineEdit
@@ -28,7 +30,7 @@ from ui.editWindow import EditWindow
 from ui.resultWindow import ResultWindow
 
 
-class MainWidget(QWidget):
+class MainWidget(QMainWindow):
     def __init__(self):
         super().__init__()
 
@@ -45,11 +47,11 @@ class MainWidget(QWidget):
         scriptSettingAction.setStatusTip('脚本配置')
         scriptSettingAction.triggered.connect(self.showScriptConf)
 
-        menubar = QMenuBar(self)
+        menubar = self.menuBar()
         settingMenu = menubar.addMenu('设置')
         settingMenu.addAction(appSettingAction)
         settingMenu.addAction(scriptSettingAction)
-        menubar.setFixedHeight(22)
+        # menubar.setFixedHeight(22)
 
         # 测试用例筛选
         appLabel = QLabel('模块名称:', self)
@@ -136,6 +138,7 @@ class MainWidget(QWidget):
         self.resultTable.setColumnWidth(2, 300)
         self.resultTable.setColumnWidth(3, 400)
 
+
         self.resultTable.itemClicked.connect(self.view_result)
 
         # 设置表格自动适应窗口
@@ -173,7 +176,10 @@ class MainWidget(QWidget):
         grid.setColumnMinimumWidth(5, 200)
         grid.setRowStretch(18, 1)
 
-        self.setLayout(grid)
+        tmpLabel = QLabel()
+        tmpLabel.setLayout(grid)
+        # self.setLayout(grid)
+        self.setCentralWidget(tmpLabel)
 
         self.setGeometry(100, 100, 1440, 800)
         self.setWindowTitle('QGATP')

@@ -10,6 +10,7 @@ from PyQt5.QtWidgets import QLineEdit
 from PyQt5.QtWidgets import QListWidget
 from PyQt5.QtWidgets import QListWidgetItem
 from PyQt5.QtWidgets import QPushButton
+from PyQt5.QtWidgets import QSpinBox
 from PyQt5.QtWidgets import QTableWidget
 from PyQt5.QtWidgets import QTableWidgetItem
 from PyQt5.QtWidgets import QComboBox
@@ -21,7 +22,7 @@ from interface.get_data import getter
 
 class EditWindow(QWidget):
     def __init__(self):
-        super().__init__()
+        super(EditWindow, self).__init__()
 
     def initUI(self,  sce_name=''):
         # 用例信息存放list
@@ -66,7 +67,6 @@ class EditWindow(QWidget):
 
         self.appCombo.activated[str].connect(self.add_module_to_feature)
 
-
         tagLabel = QLabel('所属标签:', self)
 
         self.tagCombo = QComboBox()
@@ -95,7 +95,7 @@ class EditWindow(QWidget):
         upBtn.clicked.connect(self.up_step_in_feature)
         downBtn.clicked.connect(self.down_step_in_feature)
         delBtn.clicked.connect(self.del_step_from_feature)
-        saveStepBtn.clicked.connect(self.save_step_to_feature)
+        # saveStepBtn.clicked.connect(self.save_step_to_feature)
 
         # 创建用例步骤列表
         self.featureview = QTableWidget()
@@ -111,6 +111,8 @@ class EditWindow(QWidget):
         self.stepParamview.setHorizontalHeaderLabels(['参数名', '参数值'])
         self.stepParamview.setColumnWidth(0, 180)
         self.stepParamview.horizontalHeader().setStretchLastSection(True)
+        # 单元格发生变化就触发保存操作
+        self.stepParamview.cellChanged.connect(self.save_step_to_feature)
 
         # 保存和取消按钮
         saveBtn = QPushButton('保存')
@@ -135,7 +137,7 @@ class EditWindow(QWidget):
         grid.addWidget(upBtn, 2, 3)
         grid.addWidget(downBtn, 2, 4)
         grid.addWidget(delBtn, 2, 5)
-        grid.addWidget(saveStepBtn, 2, 9)
+        # grid.addWidget(saveStepBtn, 2, 9)
 
         grid.addWidget(self.featureview, 3, 3, 20, 3)
         grid.addWidget(self.stepParamview, 3, 6, 20, 4)
@@ -145,7 +147,10 @@ class EditWindow(QWidget):
         grid.setRowMinimumHeight(25, 30)
 
         # 设置数据展示
-        self.show_steps(keyword='')
+        try:
+            self.show_steps(keyword='')
+        except:
+            pass
 
         self.step_list.doubleClicked.connect(self.insert_step_to_feature)
         self.step_list.setCurrentRow(0)
@@ -155,7 +160,11 @@ class EditWindow(QWidget):
 
         self.feature_info['module'] = ''
         self.feature_info['tags'] = ''
-        self.show_feature_info(sce_name)
+        try:
+            self.show_feature_info(sce_name)
+        except:
+            pass
+
         self.show()
 
     # 往用例中添加步骤
