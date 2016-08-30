@@ -232,7 +232,7 @@ def step_impl(context):
 @when(u'< 播放蓝牙音乐')
 def step_impl(context):
     # 点击我的音乐
-    Audio().click_audio_mine_my_ele()
+    # Audio().click_audio_mine_my_ele()
 
     Audio().click_audio_mine_bluetooth_play_ele()
 

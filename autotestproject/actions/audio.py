@@ -180,7 +180,7 @@ class Audio:
     def __get_audio_mine_bluetooth_play_ele(self):
         ele = self.__get_audio_mine_bluetooth_ele()
         if ele.wait.exists():
-            ele1 = ele.sibling(resourceId=pkg_name + ':id/mltImage')
+            ele1 = ele.sibling(resourceId=pkg_name + ':drawable/menu_selector_bluetooth')
             ele1.wait.exists()
             return ele1
         else:

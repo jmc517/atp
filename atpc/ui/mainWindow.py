@@ -66,7 +66,7 @@ class MainWidget(QMainWindow):
         self.videoCHeckbox.stateChanged.connect(self.show_features)
 
 
-        tagLabel = QLabel('标签名称:', self)
+        tagLabel = QLabel('用例类型:', self)
         self.baseScenCheckbox = QCheckBox('基本场景', self)
         self.mutiScenCheckbox = QCheckBox('复杂场景', self)
         self.btScenCheckbox = QCheckBox('蓝牙电话场景', self)
@@ -478,6 +478,7 @@ class MainWidget(QMainWindow):
                     pid = (r.strip().split(' ')[6].split('/')[0])
                     os.system('kill -9 ' + pid)
                     break
+            os.system('python3 -m http.server 9527')
         else:
             ret = os.popen('netstat -ano | findstr 9527').readlines()
             for r in ret:
@@ -488,8 +489,8 @@ class MainWidget(QMainWindow):
                     pid = r.strip().split(' ')[4]
                     os.system('taskkill /F /pid ' + pid)
                     break
-        # 启动服务
             os.system('python -m http.server 9527')
+
     # 打开应用配置
     def showAppConf(self):
         self.appConfig = AppConfig()
