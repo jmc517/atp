@@ -41,7 +41,6 @@ class FeaturesStepsRelationShip(db.Model):
 
 class TaskHistory(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement='ignore_fk')
-    task_remark = db.Column(db.String(128))
     status = db.Column(db.String(128))
     date_time = db.Column(db.String(64))
     feature_ids = db.Column(db.String(512))

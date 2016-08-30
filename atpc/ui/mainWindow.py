@@ -19,6 +19,7 @@ from PyQt5.QtWidgets import QMenuBar
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtWidgets import QLineEdit
 from PyQt5.QtWidgets import QAction
+from PyQt5.QtWidgets import QSpinBox
 from PyQt5.QtWidgets import QTableWidget
 from PyQt5.QtWidgets import QTableWidgetItem
 from PyQt5.QtWidgets import QWidget
@@ -87,6 +88,14 @@ class MainWidget(QMainWindow):
         self.runBtn = QPushButton('运行')
         self.runBtn.resize(self.runBtn.sizeHint())
 
+        self.loopLabel = QLabel('次数')
+        self.loopSpinbox = QSpinBox()
+        self.loopLabel.setFont(QFont('sanserif', 18))
+
+        self.loopSpinbox.setRange(1, 1000)
+        self.loopSpinbox.setValue(1)
+        self.loopSpinbox.setFont(QFont('sanserif', 18))
+
         self.runBtn.setFont(QFont('sanserif', 18))
         # 默认不可点击，只有选中用例才可以点击
         self.runBtn.setDisabled(True)
@@ -131,12 +140,11 @@ class MainWidget(QMainWindow):
 
         resultLabel = QLabel('执行历史列表', self)
         self.resultTable = QTableWidget()
-        self.resultTable.setColumnCount(5)
-        self.resultTable.setHorizontalHeaderLabels(['任务编号', '任务备注', '任务状态', '操作时间', '查看结果'])
+        self.resultTable.setColumnCount(4)
+        self.resultTable.setHorizontalHeaderLabels(['任务编号', '任务状态', '操作时间', '查看结果'])
         self.resultTable.setColumnWidth(0, 100)
         self.resultTable.setColumnWidth(1, 500)
-        self.resultTable.setColumnWidth(2, 300)
-        self.resultTable.setColumnWidth(3, 400)
+        self.resultTable.setColumnWidth(2, 400)
 
 
         self.resultTable.itemClicked.connect(self.view_result)
@@ -162,6 +170,8 @@ class MainWidget(QMainWindow):
         grid.addWidget(self.search_txt, 2, 1, 1, 10)
 
         grid.addWidget(self.runBtn, 2, 11, 1, 2)
+        grid.addWidget(self.loopLabel, 2, 13, 1, 1)
+        grid.addWidget(self.loopSpinbox, 2, 14, 1, 2)
 
         grid.addWidget(featureLabel, 5, 1)
         grid.addWidget(self.tipLabel, 5, 2, 1, 6)
@@ -298,14 +308,13 @@ class MainWidget(QMainWindow):
             task = tasks[i]
             self.resultTable.insertRow(i)
             self.resultTable.setItem(i, 0, QTableWidgetItem(str(task['id'])))
-            self.resultTable.setItem(i, 1, QTableWidgetItem(task['task_remark']))
-            self.resultTable.setItem(i, 2, QTableWidgetItem(task['status']))
-            self.resultTable.setItem(i, 3, QTableWidgetItem(task['date_time']))
+            self.resultTable.setItem(i, 1, QTableWidgetItem(task['status']))
+            self.resultTable.setItem(i, 2, QTableWidgetItem(task['date_time']))
 
             # viewResult = QLabel("#00ff00",'查看')
             # self.resultTable.setCellWidget(i, 4, viewResult)
 
-            self.resultTable.setItem(i, 4, QTableWidgetItem('查看'))
+            self.resultTable.setItem(i, 3, QTableWidgetItem('查看'))
 
     # 查看任务执行报告
     def view_result(self, item):
@@ -347,113 +356,110 @@ class MainWidget(QMainWindow):
 
     # 执行测试
     def run_tests(self):
-        # 弹出提示框让用户输入备注便于区分自己的运行情况
-        text, ok = QInputDialog.getText(self, '备注', '请输入任务备注:')
+        # 获取用例循环次数
+        loopCnt = self.loopSpinbox.value()
 
-        if ok:
-            date_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S:%f')
-            status = '执行中'
-            feature_ids = ''
-            # 根据选中的用例保存用例信息
-            for id in  self.selected_feature_ids:
-                if not len(feature_ids) == 0:
-                    feature_ids += ','
-                feature_ids += str(id)
+        date_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S:%f')
+        status = '执行中'
+        feature_ids = ''
+        # 根据选中的用例保存用例信息
+        for id in  self.selected_feature_ids:
+            if not len(feature_ids) == 0:
+                feature_ids += ','
+            feature_ids += str(id)
 
-            data = {'task_remark': text, 'status': status, 'date_time': date_time, 'feature_ids': feature_ids}
-            ret_save = getter.save_task_history(data)
-            self.show_task_history()
+        data = {'status': status, 'date_time': date_time, 'feature_ids': feature_ids}
+        ret_save = getter.save_task_history(data)
+        self.show_task_history()
 
-            # 生成测试用例文件
-            cf = getter.get_app_conf()
-            projectPath = str(cf.get('baseconf', 'projectLocation'))
-            featurePath = os.path.join(projectPath, 'features')
-            filelist = os.listdir(featurePath)
+        # 生成测试用例文件
+        cf = getter.get_app_conf()
+        projectPath = str(cf.get('baseconf', 'projectLocation'))
+        featurePath = os.path.join(projectPath, 'features')
+        filelist = os.listdir(featurePath)
 
-            if len(filelist) > 0:
-                for f in filelist:
-                    if f.endswith('.feature'):
-                        os.remove(os.path.join(featurePath, f))
+        if len(filelist) > 0:
+            for f in filelist:
+                if f.endswith('.feature'):
+                    os.remove(os.path.join(featurePath, f))
 
-            # 写feature文件
-            for id in self.selected_feature_ids:
-                fileName = os.path.join(featurePath, 'testcase-' + datetime.now().strftime('%Y_%m_%d%H_%M_%S_%f') + '.feature')
-                print('要写入的文件为: ' + fileName)
-                file = open(fileName, 'w')
-                print('写入文件的场景ID为: ' + str(id))
-                # 根据id 获取场景的feature_name and sce_name
-                feature = getter.get_feature_info_by_id(id)
+        # 写feature文件
+        for id in self.selected_feature_ids:
+            fileName = os.path.join(featurePath, 'testcase-' + datetime.now().strftime('%Y_%m_%d%H_%M_%S_%f') + '.feature')
+            print('要写入的文件为: ' + fileName)
+            file = open(fileName, 'w')
+            print('写入文件的场景ID为: ' + str(id))
+            # 根据id 获取场景的feature_name and sce_name
+            feature = getter.get_feature_info_by_id(id)
 
-                print('# language: zh-CN')
-                print('功能: ' + feature['feature_name'])
-                # print(feature['tags'])
-                print('场景: ' + feature['sce_name'])
-                file.writelines('# language: zh-CN')
-                file.writelines('\n')
-                file.writelines('功能: ' + feature['feature_name'])
-                file.writelines('\n')
-                # file.writelines(feature['tags'])
-                # file.writelines('\n')
-                file.writelines('场景: ' + feature['sce_name'])
-                file.writelines('\n')
+            print('# language: zh-CN')
+            print('功能: ' + feature['feature_name'])
+            # print(feature['tags'])
+            print('场景: ' + feature['sce_name'])
+            file.writelines('# language: zh-CN')
+            file.writelines('\n')
+            file.writelines('功能: ' + feature['feature_name'])
+            file.writelines('\n')
+            # file.writelines(feature['tags'])
+            # file.writelines('\n')
+            file.writelines('场景: ' + feature['sce_name'])
+            file.writelines('\n')
+            # 根据名称 获取关联的步骤场景
+            feature_steps_relationship = getter.get_featrue_step_relationship(feature['sce_name'])
+            if len(feature_steps_relationship) > 0:
+                feature_steps_info = []
+                for fs in feature_steps_relationship:
+                    step_id = fs['id']
+                    step_info = getter.get_step_info_by_id(step_id)
+                    step_name = step_info['name']
+                    step_is_chk = step_info['is_chk']
+                    step_idx = fs['idx']
+                    params = fs['params']
+                    st = {'name': step_name, 'is_chk':step_is_chk, 'params': params}
+                    feature_steps_info.insert(step_idx, st)
 
-                # 根据名称 获取关联的步骤场景
-                feature_steps_relationship = getter.get_featrue_step_relationship(feature['sce_name'])
-                if len(feature_steps_relationship) > 0:
-                    feature_steps_info = []
-                    for fs in feature_steps_relationship:
-                        step_id = fs['id']
-                        step_info = getter.get_step_info_by_id(step_id)
-                        step_name = step_info['name']
-                        step_is_chk = step_info['is_chk']
-                        step_idx = fs['idx']
-                        params = fs['params']
-                        st = {'name': step_name, 'is_chk':step_is_chk, 'params': params}
-                        feature_steps_info.insert(step_idx, st)
+                for fsi in feature_steps_info:
+                    if fsi['is_chk']:
+                        print('那么< ' + fsi['name'])
+                        file.writelines('那么< ' + fsi['name'])
+                        file.writelines('\n')
+                    else:
+                        print('当< ' + fsi['name'])
+                        file.writelines('当< ' + fsi['name'])
+                        file.writelines('\n')
 
-                    for fsi in feature_steps_info:
-
-                        if fsi['is_chk']:
-                            print('那么< ' + fsi['name'])
-                            file.writelines('那么< ' + fsi['name'])
-                            file.writelines('\n')
-                        else:
-                            print('当< ' + fsi['name'])
-                            file.writelines('当< ' + fsi['name'])
-                            file.writelines('\n')
-
-                        if len(fsi['params']) > 0:
-                            for p in fsi['params']:
-                                print('|' + p['name'],end='')
-                                file.writelines('|' + p['name'])
-
-                            print('|')
-                            file.writelines('|')
-                            file.writelines('\n')
-                            for v in fsi['params']:
-                                print('|' + v['value'],end='')
-                                file.writelines('|' + v['value'])
-                            print('|')
-                            file.writelines('|')
-                            file.writelines('\n')
-                file.close()
-            print('文件生成完成')
-            # 运行测试用例
-            os.chdir(projectPath)
-            # 调用运行测试用例函数
-            global t
-            t = threading.Thread(target=self.run_behave_cmd, args=(ret_save['id'],))
-            t.setDaemon(True)
-            t.start()
+                    if len(fsi['params']) > 0:
+                        for p in fsi['params']:
+                            print('|' + p['name'], end='')
+                            file.writelines('|' + p['name'])
+                        print('|')
+                        file.writelines('|')
+                        file.writelines('\n')
+                        for v in fsi['params']:
+                            print('|' + v['value'], end='')
+                            file.writelines('|' + v['value'])
+                        print('|')
+                        file.writelines('|')
+                        file.writelines('\n')
+            file.close()
+        print('文件生成完成')
+        # 运行测试用例
+        os.chdir(projectPath)
+        # 调用运行测试用例函数
+        global t
+        t = threading.Thread(target=self.run_behave_cmd, args=(ret_save['id'], loopCnt))
+        t.setDaemon(True)
+        t.start()
     # 运行behave命令 并生成xml 报告文件
-    def run_behave_cmd(self, id):
+    def run_behave_cmd(self, id, loopCnt):
         cf = getter.get_app_conf()
         projectPath = str(cf.get('baseconf', 'projectLocation'))
         # reportPath = os.path.join(projectPath, 'reports', str(id))
         reportPath = os.path.join(projectPath, 'reports', str(id), 'report.log')
 
         # os.system('behave  -k --junit --junit-directory ' + reportPath)
-        os.system('behave  -k --show-source --show-timings --outfile ' + reportPath)
+        for i in range(int(loopCnt)):
+            os.system('behave  -k --show-source --show-timings --outfile ' + reportPath)
         getter.update_task_status(id)
         self.show_task_history()
 

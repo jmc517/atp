@@ -81,6 +81,12 @@ class EditWindow(QWidget):
         self.tipLabel = QLabel(self)
         self.tipLabel.setFont(QFont("Roman times", 12))
 
+        self.stepCombo = QComboBox()
+        self.stepCombo.addItem('所有')
+        self.stepCombo.addItem('操作')
+        self.stepCombo.addItem('验证')
+        self.stepCombo.setCurrentIndex(0)
+
         search_step = QLineEdit()
         search_step.setPlaceholderText('请输入关键字')
         search_step.textChanged[str].connect(self.show_steps)
@@ -132,7 +138,8 @@ class EditWindow(QWidget):
 
         grid.addWidget(self.tipLabel, 1, 6)
 
-        grid.addWidget(search_step, 2, 0, 1, 3)
+        grid.addWidget(self.stepCombo,2, 0)
+        grid.addWidget(search_step, 2, 1, 1, 2)
         grid.addWidget(self.step_list, 3, 0, 20, 3)
         grid.addWidget(upBtn, 2, 3)
         grid.addWidget(downBtn, 2, 4)
@@ -340,7 +347,7 @@ class EditWindow(QWidget):
             self.flagLabel.setPalette(self.pe_green)
 
     # 展示步骤
-    def show_steps(self,keyword):
+    def show_steps(self, keyword):
         # 设置数据展示
         steps = getter.get_step_all()
         self.step_list.clear()

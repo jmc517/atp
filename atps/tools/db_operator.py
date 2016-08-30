@@ -49,7 +49,7 @@ class DbOpt:
 
     def insert_task_history(self, data):
         try:
-            s = models.TaskHistory(task_remark=data['task_remark'], status=data['status'], date_time=data['date_time'], feature_ids=data['feature_ids'])
+            s = models.TaskHistory(status=data['status'], date_time=data['date_time'], feature_ids=data['feature_ids'])
             db.session.add(s)
             db.session.commit()
             id_s = models.TaskHistory.query.filter_by(date_time=data['date_time']).first()

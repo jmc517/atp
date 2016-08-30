@@ -166,7 +166,7 @@ def get_task_all():
     data = []
     for ta in tasks:
         print(ta.id)
-        task = {'id':ta.id,'task_remark':ta.task_remark, 'status':ta.status, 'date_time':ta.date_time, 'feature_ids':ta.feature_ids}
+        task = {'id':ta.id, 'status':ta.status, 'date_time':ta.date_time, 'feature_ids':ta.feature_ids}
         data.insert(0,task)
     return jsonify(data)
 @app.route('/atp/task/status/update/<int:id>')
