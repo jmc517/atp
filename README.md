@@ -16,3 +16,6 @@ pyqt5.5.1
 uiautomator(python版)  
 flask  
 
+## 截图
+![mainWindow](http://a.hiphotos.baidu.com/image/pic/item/b8389b504fc2d562bd1ca34fef1190ef76c66c7f.jpg)
+![editWindow](http://g.hiphotos.baidu.com/image/pic/item/37d12f2eb9389b5079fe93f08d35e5dde7116e0a.jpg)
