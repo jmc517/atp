@@ -9,6 +9,7 @@ from PyQt5.QtWidgets import QApplication
 import webbrowser as web
 from PyQt5.QtWidgets import QGridLayout
 from PyQt5.QtWidgets import QPushButton, QTextEdit
+from PyQt5.QtWidgets import QTreeWidget
 from PyQt5.QtWidgets import QWidget
 from PyQt5 import Qt
 
@@ -42,10 +43,10 @@ class ResultWindow(QWidget):
         self.textArea.setFont(QFont('sanserif', 12))
         self.textArea.setPlaceholderText('没有生成报告，请确定是否执行结束')
 
+
         grid.addWidget(closeBtn, 1, 9)
         grid.addWidget(downloadBtn, 1, 10)
         grid.addWidget(self.textArea, 2, 0, 20, 11)
-
         cf = getter.get_app_conf()
         projectPath = str(cf.get('baseconf', 'projectLocation'))
         reportPath = os.path.join(projectPath, 'reports', str(id), 'report.log')

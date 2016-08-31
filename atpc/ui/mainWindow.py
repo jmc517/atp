@@ -2,6 +2,7 @@
 import os
 import sys
 import threading
+import webbrowser
 from datetime import datetime
 
 from PyQt5.QtGui import QColor
@@ -77,6 +78,9 @@ class MainWidget(QMainWindow):
         self.mutiScenCheckbox.stateChanged.connect(self.show_features)
         self.btScenCheckbox.stateChanged.connect(self.show_features)
         self.ivokaScenCheckbox.stateChanged.connect(self.show_features)
+
+        self.jenkinsLink = QPushButton('持续集成>>')
+        self.jenkinsLink.clicked.connect(self.openJenkinsBrowser)
 
 
         self.search_txt = QLineEdit(self)
@@ -166,6 +170,7 @@ class MainWidget(QMainWindow):
         grid.addWidget(self.mutiScenCheckbox, 1, 8)
         grid.addWidget(self.btScenCheckbox, 1, 9)
         grid.addWidget(self.ivokaScenCheckbox, 1, 10)
+        grid.addWidget(self.jenkinsLink, 1, 19)
 
         grid.addWidget(self.search_txt, 2, 1, 1, 10)
 
@@ -320,7 +325,7 @@ class MainWidget(QMainWindow):
     def view_result(self, item):
         cnt = item.row()
         taskid = self.resultTable.item(cnt, 0).text()
-        if item.column() == 4:
+        if item.column() == 3:
             # web.open_new_tab('http://localhost:9527/' + taskid + '/' + 'report.log')
             self.resultWindow = ResultWindow()
             self.resultWindow.initUI(taskid)
@@ -505,3 +510,6 @@ class MainWidget(QMainWindow):
     def showScriptConf(self):
         self.atConfig = AtConfig()
         self.atConfig.initUI()
+
+    def openJenkinsBrowser(self):
+        webbrowser.open_new_tab('http://10.10.99.87:8080/job/OS2.0_AllTests/')

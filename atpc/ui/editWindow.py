@@ -32,7 +32,7 @@ class EditWindow(QWidget):
         self.setGeometry(10, 10, 1024, 768)
         self.setWindowTitle('编辑用例')
         self.setWindowIcon(QIcon('./images/icon.jpg'))
-        self.setWindowFlags( Qt.Qt.SubWindow)
+        self.setWindowFlags(Qt.Qt.SubWindow)
 
         grid = QGridLayout()
 
@@ -86,10 +86,11 @@ class EditWindow(QWidget):
         self.stepCombo.addItem('操作')
         self.stepCombo.addItem('验证')
         self.stepCombo.setCurrentIndex(0)
+        self.stepCombo.currentTextChanged.connect(self.show_steps)
 
-        search_step = QLineEdit()
-        search_step.setPlaceholderText('请输入关键字')
-        search_step.textChanged[str].connect(self.show_steps)
+        self.search_step = QLineEdit()
+        self.search_step.setPlaceholderText('请输入关键字')
+        self.search_step.textChanged.connect(self.show_steps)
         self.step_list = QListWidget()
 
         upBtn = QPushButton('上移')
@@ -139,7 +140,7 @@ class EditWindow(QWidget):
         grid.addWidget(self.tipLabel, 1, 6)
 
         grid.addWidget(self.stepCombo,2, 0)
-        grid.addWidget(search_step, 2, 1, 1, 2)
+        grid.addWidget(self.search_step, 2, 1, 1, 2)
         grid.addWidget(self.step_list, 3, 0, 20, 3)
         grid.addWidget(upBtn, 2, 3)
         grid.addWidget(downBtn, 2, 4)
@@ -155,7 +156,7 @@ class EditWindow(QWidget):
 
         # 设置数据展示
         try:
-            self.show_steps(keyword='')
+            self.show_steps()
         except:
             pass
 
@@ -347,14 +348,26 @@ class EditWindow(QWidget):
             self.flagLabel.setPalette(self.pe_green)
 
     # 展示步骤
-    def show_steps(self, keyword):
+    def show_steps(self):
         # 设置数据展示
         steps = getter.get_step_all()
         self.step_list.clear()
         stepListItem = []
+        # 判断是所有 操作 还是验证
+        step_type = self.stepCombo.currentText().strip()
+        keyword = self.search_step.text().strip()
+
         for st in steps:
+            # stepListItem.append(QListWidgetItem(st['name']))
+
             if keyword in st['name'] or keyword == '':
-                stepListItem.append(QListWidgetItem(st['name']))
+                if step_type == '验证' and st['name'].startswith(step_type):
+                    stepListItem.append(QListWidgetItem(st['name']))
+                if step_type == '操作' and not st['name'].startswith('验证'):
+                    stepListItem.append(QListWidgetItem(st['name']))
+                if step_type == '所有':
+                    stepListItem.append(QListWidgetItem(st['name']))
+
         for i in range(len(stepListItem)):
             self.step_list.insertItem(i, stepListItem[i])
 
