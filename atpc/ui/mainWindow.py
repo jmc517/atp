@@ -30,6 +30,7 @@ from interface.get_data import getter
 from ui.atConfig import AtConfig
 from ui.editWindow import EditWindow
 from ui.resultWindow import ResultWindow
+from ui.viewResult import ViewResult
 
 
 class MainWidget(QMainWindow):
@@ -326,9 +327,8 @@ class MainWidget(QMainWindow):
         cnt = item.row()
         taskid = self.resultTable.item(cnt, 0).text()
         if item.column() == 3:
-            # web.open_new_tab('http://localhost:9527/' + taskid + '/' + 'report.log')
-            self.resultWindow = ResultWindow()
-            self.resultWindow.initUI(taskid)
+            self.viewResult = ViewResult()
+            self.viewResult.initUI(taskid)
 
     # 选中feature
     def check_features(self, item):
@@ -464,7 +464,7 @@ class MainWidget(QMainWindow):
 
         # os.system('behave  -k --junit --junit-directory ' + reportPath)
         for i in range(int(loopCnt)):
-            os.system('behave  -k --show-source --show-timings --outfile ' + reportPath)
+            os.system('behave  -k --show-source --show-timings --format plain --outfile ' + reportPath)
         getter.update_task_status(id)
         self.show_task_history()
 

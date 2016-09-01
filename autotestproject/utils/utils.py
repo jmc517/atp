@@ -4,6 +4,10 @@ import platform
 import socket
 import subprocess
 import time
+import math
+from PIL import Image
+import operator
+from functools import reduce
 from configparser import ConfigParser
 
 from uiautomator import Device
@@ -280,6 +284,18 @@ class Utils:
         else:
             print('已经连接wifi')
             return True
+
+    # 获取图片比对数据结果
+    def get_image_diff_data(self, image1, image2):
+        # get init image
+        img1 = Image.open(image1)
+        img2 = Image.open(image2)
+
+        h1 = img1.histogram()
+        h2 = img2.histogram()
+
+        result = math.sqrt(reduce(operator.add, list(map(lambda a, b: (a - b) ** 2, h1, h2))) / len(h1))
+        return result
 
 # print(Utils().get_conf_value('player'))
 #

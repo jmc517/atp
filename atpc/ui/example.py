@@ -4,6 +4,7 @@ import sys
 from PyQt5.QtGui import QBrush
 from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QGridLayout
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtWidgets import QTreeView
 from PyQt5.QtWidgets import QTreeWidget
@@ -11,9 +12,10 @@ from PyQt5.QtWidgets import QTreeWidgetItem
 from PyQt5.QtWidgets import QWidget
 
 
-class Example(QMainWindow):
+class Example(QWidget):
     def __init__(self, parent=None):
-        QWidget.__init__(self, parent)
+        super(Example, self).__init__(parent)
+        grid = QGridLayout()
         self.setWindowTitle('TreeWidget')
         self.tree = QTreeWidget()
         self.tree.setColumnCount(1)
@@ -45,8 +47,11 @@ class Example(QMainWindow):
         file = open('/home/ogq/learn/report.log', 'r')
         step_flag = None
         scen_flag = None
+        total_cnt = 0
+        failed_cnt = 0
         for f in file:
             if f.strip().startswith('场景:'):
+                total_cnt += 1
                 step_flag = True
                 scen_flag = True
                 self.featureTree = QTreeWidgetItem(self.tree)
@@ -58,16 +63,18 @@ class Example(QMainWindow):
                 else:
                     backgroundTree.setText(0, f.replace('\n', ''))
                 if 'passed' in f:
-                    backgroundTree.setBackground(0, QBrush(QColor(0, 250, 0)))
+                    # backgroundTree.setBackground(0, QBrush(QColor(0, 250, 0)))
                     step_flag = True
 
                 if 'failed' in f:
                     backgroundTree.setBackground(0, QBrush(QColor(250, 0, 0)))
                     step_flag = False
                     scen_flag = False
+                    failed_cnt += 1
 
                 if step_flag:
-                    backgroundTree.setBackground(0, QBrush(QColor(0, 250, 0)))
+                    pass
+                    # backgroundTree.setBackground(0, QBrush(QColor(0, 250, 0)))
                 else:
                     backgroundTree.setBackground(0, QBrush(QColor(250, 0, 0)))
 
@@ -78,7 +85,12 @@ class Example(QMainWindow):
 
 
         file.close()
-        self.setCentralWidget(self.tree)
+        print(total_cnt)
+        print(failed_cnt)
+        grid.addWidget(self.tree, 0, 1)
+        self.setLayout(grid)
+        # self.tree.show()
+        # self.setCentralWidget(self.tree)
 '''
         for i in range(10):
             main = QTreeWidgetItem(self.tree)
