@@ -6,7 +6,6 @@ from PyQt5.QtGui import QBrush
 from PyQt5.QtGui import QColor
 from PyQt5.QtGui import QFont
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QApplication
 import webbrowser as web
 from PyQt5.QtWidgets import QGridLayout
 from PyQt5.QtWidgets import QLabel

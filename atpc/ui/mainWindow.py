@@ -5,33 +5,26 @@ import threading
 import webbrowser
 from datetime import datetime
 
-from PyQt5.QtGui import QColor
 from PyQt5.QtGui import QFont
 from PyQt5.QtGui import QIcon
 from PyQt5.QtGui import QPalette
 from PyQt5.QtWidgets import QAbstractItemView
-from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QCheckBox
 from PyQt5.QtWidgets import QGridLayout
-from PyQt5.QtWidgets import QInputDialog
 from PyQt5.QtWidgets import QLabel
 from PyQt5.QtWidgets import QMainWindow
-from PyQt5.QtWidgets import QMenuBar
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtWidgets import QLineEdit
 from PyQt5.QtWidgets import QAction
 from PyQt5.QtWidgets import QSpinBox
 from PyQt5.QtWidgets import QTableWidget
 from PyQt5.QtWidgets import QTableWidgetItem
-from PyQt5.QtWidgets import QWidget
 from PyQt5.QtCore import Qt
 from ui.appConfig import AppConfig
 from interface.get_data import getter
 from ui.atConfig import AtConfig
 from ui.editWindow import EditWindow
-from ui.resultWindow import ResultWindow
 from ui.viewResult import ViewResult
-
 
 class MainWidget(QMainWindow):
     def __init__(self):
