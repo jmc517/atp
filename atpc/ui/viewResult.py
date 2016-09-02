@@ -8,6 +8,7 @@ from PyQt5.QtGui import QFont
 from PyQt5.QtGui import QIcon
 import webbrowser as web
 from PyQt5.QtWidgets import QGridLayout
+from PyQt5.QtWidgets import QInputDialog
 from PyQt5.QtWidgets import QLabel
 from PyQt5.QtWidgets import QPushButton, QTextEdit
 from PyQt5.QtWidgets import QTreeWidget
@@ -59,16 +60,19 @@ class ViewResult(QWidget):
         cf = getter.get_app_conf()
         projectPath = str(cf.get('baseconf', 'projectLocation'))
         reportPath = os.path.join(projectPath, 'reports', str(id), 'report.log')
-        if not os.path.exists(reportPath):
+        # 获取结果 数据库查询
+        res = getter.get_task_his_by_id(self.taskid)
+        result = res['result']
+
+        if len(result) == 0:
             self.tipLabel.setText('没有生成报告，请确定是否执行结束')
             return
 
-        file = open(reportPath, 'r', encoding='utf-8')
         step_flag = None
         scen_flag = None
         total_cnt = 0
         failed_cnt = 0
-        for f in file:
+        for f in result.split('\n'):
             if f.strip().startswith('场景:'):
                 total_cnt += 1
                 step_flag = True
@@ -105,12 +109,22 @@ class ViewResult(QWidget):
                 else:
                     self.featureTree.setForeground(0, QBrush(QColor(255, 0, 0)))
 
-        file.close()
+        # file.close()
 
         self.tipLabel.setText('全部用例:' + str(total_cnt) + '条, 通过用例:' + str(total_cnt - failed_cnt) + '条, 失败用例:' + str(failed_cnt) + '条')
 
     def downloadLog(self):
-        web.open_new_tab('http://localhost:9527/' + self.taskid + '/' + 'report.log')
+        text, ok = QInputDialog.getText(self, '下载报告', '请输入保存文件路径(含文件名)')
+
+        if ok:
+            res = getter.get_task_his_by_id(self.taskid)
+            result = res['result']
+            file = open(text, 'w')
+            for line in result.split('\n'):
+                if len(line.strip()) > 0:
+                    file.writelines(line)
+                    file.writelines('\n')
+            file.close()
 # app = QApplication(sys.argv)
 # te = ViewResult()
 # te.initUI(14)

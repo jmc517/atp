@@ -49,7 +49,7 @@ class DbOpt:
 
     def insert_task_history(self, data):
         try:
-            s = models.TaskHistory(status=data['status'], date_time=data['date_time'], feature_ids=data['feature_ids'])
+            s = models.TaskHistory(status=data['status'], date_time=data['date_time'], feature_ids=data['feature_ids'], results='')
             db.session.add(s)
             db.session.commit()
             id_s = models.TaskHistory.query.filter_by(date_time=data['date_time']).first()
@@ -60,8 +60,23 @@ class DbOpt:
             raise Exception(e)
 
     def update_task_status(self, id):
-        task = models.TaskHistory.query.filter_by(id=id).first()
-        task.status = '执行结束'
-        db.session.commit()
+        try:
+            task = models.TaskHistory.query.filter_by(id=id).first()
+            task.status = '执行结束'
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            raise Exception(e)
+    # 保存运行结果到数据库
+    def save_result_to_task(self, data):
+        try:
+            task = models.TaskHistory.query.filter_by(id=data['id']).first()
+            task.results = data['result']
+            print(task.results)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            raise Exception(e)
+
 
 dbOpter = DbOpt()

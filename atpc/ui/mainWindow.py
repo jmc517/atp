@@ -458,8 +458,15 @@ class MainWidget(QMainWindow):
         # os.system('behave  -k --junit --junit-directory ' + reportPath)
         for i in range(int(loopCnt)):
             os.system('behave  -k --show-source --show-timings --format plain --outfile ' + reportPath)
-        getter.update_task_status(id)
-        self.show_task_history()
+        try:
+            getter.update_task_status(id)
+            file = open(reportPath, 'r', encoding='utf-8').read()
+            data = {'id': id, 'result': file}
+            getter.save_result_to_task_his(data)
+        except Exception as e:
+            raise Exception(e)
+        finally:
+            self.show_task_history()
 
     # 启动查看报告服务 默认端口 9527
     def run_http_server(self):

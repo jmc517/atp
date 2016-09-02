@@ -75,5 +75,16 @@ class GetData:
         cf.read(appConfigPath)
         return cf
 
+    def save_result_to_task_his(self, data):
+        res = requests.post(self.get_request_url() + '/atp/task/result/save', json=data)
+        return res.json()
+
+    def get_task_his_by_id(self, id):
+        print(id)
+        res = requests.get(self.get_request_url() + '/atp/task/' + str(id))
+        print('-------------------')
+        print(res.json())
+        return res.json()
+
 getter = GetData()
 

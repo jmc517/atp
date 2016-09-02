@@ -158,8 +158,14 @@ def del_feature(feature_id):
 def save_task_history():
     print(request.json)
     id = dbOpter.insert_task_history(request.json)
-
     return jsonify({'result':'true', 'id': id})
+
+@app.route('/atp/task/result/save', methods=['POST'])
+def save_result_to_task_his():
+    print(request.json)
+    dbOpter.save_result_to_task(request.json)
+    return jsonify({'result': 'true'})
+
 @app.route('/atp/task/all')
 def get_task_all():
     tasks = models.TaskHistory.query.order_by(models.TaskHistory.date_time)
@@ -173,3 +179,14 @@ def get_task_all():
 def update_task_status(id):
     dbOpter.update_task_status(id)
     return jsonify({'result': 'true'})
+
+@app.route('/atp/task/<int:id>')
+def get_task_his_by_id(id):
+    task = models.TaskHistory.query.filter_by(id=id).first()
+    data = {}
+    if task.results == None:
+        data = {'id': task.id, 'status': task.status, 'date_time': task.date_time, 'feature_ids': task.feature_ids,'result': ''}
+    else:
+        data = {'id':task.id, 'status':task.status, 'date_time':task.date_time, 'feature_ids':task.feature_ids, 'result': task.results}
+    return jsonify(data)
+

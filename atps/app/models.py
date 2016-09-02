@@ -44,3 +44,4 @@ class TaskHistory(db.Model):
     status = db.Column(db.String(128))
     date_time = db.Column(db.String(64))
     feature_ids = db.Column(db.String(512))
+    results = db.Column(db.String())

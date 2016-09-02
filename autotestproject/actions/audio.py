@@ -150,12 +150,6 @@ class Audio:
         ele.wait.exists()
         return ele
 
-        # 获取蓝牙歌曲控件
-    def __get_audio_mine_bluetooth_ele(self):
-        ele = d(text='蓝牙歌曲', resourceId=pkg_name + ':id/txt_title')
-        ele.wait.exists()
-        return ele
-
     # 获取USB歌曲同级的歌曲数目
     def __get_audio_mine_usb_cnt_ele(self):
         ele = self.__get_audio_mine_usb_ele()
@@ -178,13 +172,8 @@ class Audio:
 
     # 获取蓝牙歌曲播放控件
     def __get_audio_mine_bluetooth_play_ele(self):
-        ele = self.__get_audio_mine_bluetooth_ele()
-        if ele.wait.exists():
-            ele1 = ele.sibling(resourceId=pkg_name + ':drawable/menu_selector_bluetooth')
-            ele1.wait.exists()
-            return ele1
-        else:
-            Utils().raise_Exception_info('蓝牙音乐控件不存在')
+        ele = Utils().get_ele_by_resourceId(pkg_name + ':drawable/menu_selector_bluetooth')
+        return ele
 
     # 获取音乐收藏控件
     def __get_audio_fav_ele(self):
