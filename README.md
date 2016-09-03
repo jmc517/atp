@@ -17,5 +17,8 @@ uiautomator(python版)
 flask  
 
 ## 截图
-![mainWindow](http://a.hiphotos.baidu.com/image/pic/item/b8389b504fc2d562bd1ca34fef1190ef76c66c7f.jpg)
-![editWindow](http://g.hiphotos.baidu.com/image/pic/item/37d12f2eb9389b5079fe93f08d35e5dde7116e0a.jpg)
+![mainWindow](http://f.hiphotos.baidu.com/image/pic/item/f703738da97739122eeed3c6f0198618377ae249.jpg)
+![editWindow](http://a.hiphotos.baidu.com/image/pic/item/43a7d933c895d1432dbeb2847bf082025baf0748.jpg)
+![viewResult](http://f.hiphotos.baidu.com/image/pic/item/6a63f6246b600c335a578f6f124c510fd9f9a16f.jpg)
+![settings](http://f.hiphotos.baidu.com/image/pic/item/9922720e0cf3d7caaed86ed1fa1fbe096b63a96f.jpg)
+![settings](http://e.hiphotos.baidu.com/image/pic/item/91529822720e0cf303d91f5c0246f21fbe09aa6f.jpg)

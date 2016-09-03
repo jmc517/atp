@@ -9,6 +9,7 @@ from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtWidgets import QWidget
 from configparser import ConfigParser
 from interface.get_data import getter
+from PyQt5 import Qt
 
 class AtConfig(QWidget):
     def __init__(self):
@@ -17,6 +18,7 @@ class AtConfig(QWidget):
     def initUI(self):
         self.setGeometry(100, 100, 600, 500)
         self.setWindowTitle('脚本配置')
+        self.setWindowFlags(Qt.Qt.SubWindow)
         grid = QGridLayout()
 
         self.playerLabel = QLabel('音频播放器路径: ')

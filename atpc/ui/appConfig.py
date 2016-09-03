@@ -8,6 +8,8 @@ from PyQt5.QtWidgets import QLineEdit
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtWidgets import QWidget
 from configparser import ConfigParser
+from PyQt5 import Qt
+
 
 class AppConfig(QWidget):
     def __init__(self):
@@ -17,6 +19,8 @@ class AppConfig(QWidget):
 
         self.setGeometry(100, 100, 400, 300)
         self.setWindowTitle('应用配置')
+        self.setWindowFlags(Qt.Qt.SubWindow)
+        
         grid = QGridLayout()
 
 

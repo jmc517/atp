@@ -96,7 +96,6 @@ class EditWindow(QWidget):
         upBtn = QPushButton('上移')
         downBtn = QPushButton('下移')
         delBtn = QPushButton('删除')
-        saveStepBtn = QPushButton('保存')
 
 
         upBtn.clicked.connect(self.up_step_in_feature)

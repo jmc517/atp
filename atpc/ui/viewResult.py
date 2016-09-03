@@ -42,7 +42,6 @@ class ViewResult(QWidget):
         self.tipLabel.setFont(QFont('sanserif', 12))
         self.tipLabel.setText('')
 
-        self.setWindowTitle('TreeWidget')
         self.tree = QTreeWidget()
         self.tree.setColumnCount(1)
         self.tree.setHeaderLabels([''])
