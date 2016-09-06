@@ -196,7 +196,8 @@ class MainWidget(QMainWindow):
         try:
             self.show_features()
             self.show_task_history()
-        except :
+        except Exception as e:
+            print('连接错误，请检查服务器地址和端口并重新启动')
             self.tipLabel.setText('连接错误，请检查服务器地址和端口并重新启动')
             self.tipLabel.setPalette(self.pe_red)
 

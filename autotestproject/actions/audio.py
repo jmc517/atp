@@ -601,11 +601,11 @@ class Audio:
     # 从音乐界面返回到launcher界面
     def back_to_launcher(self):
         # 判断是否在酷我音乐界面
-        package_name = d.info['currentPackageName']
-        if package_name == 'cn.kuwo.kwmusiccar':
-            self.back_from_kuwo()
+        # package_name = d.info['currentPackageName']
+        # if package_name == 'cn.kuwo.kwmusiccar':
+        #     self.back_from_kuwo()
         # 判断是否在我的音乐库或音乐列表界面或者酷我，今日歌单
-        elif self.__get_audio_mine_drawer_ele().exists:
+        if self.__get_audio_mine_drawer_ele().exists:
             self.hide_audio_mine_drawer()
             self.click_audio_home_ele()
         #     判断是否在音乐搜索界面
@@ -638,8 +638,8 @@ class Audio:
         return ele.exists
 
     def back_from_kuwo(self):
-        package_name = d.info['currentPackageName']
-        back = Utils().get_ele_by_resourceId(package_name + ':id/layoutPlayControlPanel')
+        # package_name = d.info['currentPackageName']
+        back = Utils().get_ele_by_resourceId('cn.kuwo.kwmusiccar:id/layoutPlayControlPanel')
         if back.wait.exists():
             back.click.wait()
         else:

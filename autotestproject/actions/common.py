@@ -34,8 +34,10 @@ class Common:
                     Video().back_to_launcher()
                 elif 'com.pateonavi.naviapp'.__eq__(package_name):
                     Navi().back_to_launcher()
-                elif 'pateo.dls.audioui'.__eq__(package_name) or 'cn.kuwo.kwmusiccar'.__eq__(package_name):
+                elif 'pateo.dls.audioui'.__eq__(package_name):
                     Audio().back_to_launcher()
+                elif 'cn.kuwo.kwmusiccar'.__eq__(package_name):
+                    Audio().back_from_kuwo()
                 elif 'pateo.dls.app.radio'.__eq__(package_name):
                     Radio().back_to_launcher()
                 elif 'pateo.dls.qplay'.__eq__(package_name):
@@ -62,8 +64,10 @@ class Common:
                     Video().back_to_launcher()
                 elif 'com.pateonavi.naviapp'.__eq__(package_name):
                     Navi().back_to_launcher()
-                elif 'com.qinggan.app.music'.__eq__(package_name) or 'cn.kuwo.kwmusiccar'.__eq__(package_name):
+                elif 'com.qinggan.app.music'.__eq__(package_name):
                     Audio().back_to_launcher()
+                elif 'cn.kuwo.kwmusiccar'.__eq__(package_name):
+                    Audio().back_from_kuwo()
                 elif 'com.qinggan.app.radio'.__eq__(package_name):
                     Radio().back_to_launcher()
                 elif 'com.qinggan.app.qplay'.__eq__(package_name):
