@@ -52,7 +52,7 @@ class AppConfig(QWidget):
         grid.addWidget(self.serverPortTxt, 3, 1, 1, 3)
         grid.addWidget(self.okBtn, 7,2)
         grid.addWidget(self.cancelBtn, 7, 3)
-
+        grid.setRowMinimumHeight(8, 30)
         grid.setRowStretch(4, 1)
 
 

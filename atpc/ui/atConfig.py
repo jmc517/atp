@@ -77,6 +77,7 @@ class AtConfig(QWidget):
         grid.addWidget(self.usbMusicTxt, 8, 1, 1, 3)
         grid.addWidget(self.okBtn, 9, 3)
         grid.addWidget(self.cancelBtn, 9, 4)
+        grid.setRowMinimumHeight(10, 30)
 
         self.setLayout(grid)
         self.showConfigs()
