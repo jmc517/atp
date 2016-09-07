@@ -67,7 +67,7 @@ class EditWindow(QWidget):
 
         self.appCombo.activated[str].connect(self.add_module_to_feature)
 
-        tagLabel = QLabel('所属标签:', self)
+        tagLabel = QLabel('用例类型:', self)
 
         self.tagCombo = QComboBox()
         self.tagCombo.addItem('--请选择--')
@@ -281,12 +281,12 @@ class EditWindow(QWidget):
             self.flagLabel.setPalette(self.pe_red)
             return
 
-        if self.feature_info['tags'] == '':
-            self.tipLabel.setText('请选择标签')
+        if self.feature_info['tags'] == '' or self.feature_info['tags'] == '--请选择--':
+            self.tipLabel.setText('请选择用例类型')
             self.tipLabel.setPalette(self.pe_red)
             return
 
-        if self.feature_info['module'] == '':
+        if self.feature_info['module'] == '' or self.feature_info['module'] == '--请选择--':
             self.tipLabel.setText('请选择模块名称')
             self.tipLabel.setPalette(self.pe_red)
             return
