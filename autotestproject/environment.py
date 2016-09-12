@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 import os
-import sys
+import subprocess
 import threading
 
 import time
@@ -37,23 +37,9 @@ def before_all(context):
         if not flag:
             Phone().click_pair_ele()
 
-    #print('应用初始化')
-    #print('刷新收音机列表')
-    #Common().back_to_launcher()
-    #Launcher().click_radio_ele()
-    #print('激活导航地图')
-    #Common().back_to_launcher()
-    #Launcher().click_navi_ele()
-    #Navi().active_navi()
-
-    # Radio().click_radio_selector_ele()
-    # Radio().click_radio_selector_fm_ele()
-    # Radio().refresh_radio_selector_listview()
-    #time.sleep(3)
-    #ele = d(textContains='电台扫描中')
-    #if ele.wait.exists(timeout = 30000):
-     #   ele.wait.gone(timeout=60000)
-    #print('收音机列表刷新结束')
+    # 清空logcat日志记录
+    log_path = Utils().get_conf_value('logPath')
+    subprocess.call('rm -rf ' + log_path, shell=True)
 
 # 场景前处理
 # 每个场景之前确保设备在主界面
@@ -61,16 +47,16 @@ def before_scenario(context, scenario):
     sce_name = scenario.name
     print('=' * 60)
     print('场景《' + sce_name + '》开始执行！')
-    print('开始记录CPU信息 >>>')
-    global t
-    t = threading.Thread(target=Utils().get_top_info_to_file,args = (sce_name,))
-    t.setDaemon(True)
-    t.start()
-    # print('开始记录logcat日志信息')
-    # global t_logcat
-    # t_logcat = threading.Thread(target=Utils().logcat_to_file, args=(sce_name,))
-    # t_logcat.setDaemon(True)
-    # t_logcat.start()
+    # print('开始记录CPU信息 >>>')
+    # global t
+    # t = threading.Thread(target=Utils().get_top_info_to_file,args=(sce_name,))
+    # t.setDaemon(True)
+    # t.start()
+    print('开始记录logcat日志信息')
+    global t_logcat
+    t_logcat = threading.Thread(target=Utils().logcat_to_file, args=(sce_name,))
+    t_logcat.setDaemon(True)
+    t_logcat.start()
     print('执行场景前处理，回到主界面')
     try:
         Common().back_to_launcher()
@@ -94,22 +80,22 @@ def after_scenario(context, scenario):
     sce_name = scenario.name
     status = scenario.status
     try:
-        t._stop()
-        t.join()
-        # Utils().send_logcat_flag(status)
-        # t_logcat._stop()
-        # t_logcat.join()
+        # t._stop()
+        # t.join()
+        Utils().send_logcat_flag(status)
+        t_logcat._stop()
+        t_logcat.join()
     except Exception as e:
         print(e)
-    finally:
+    # finally:
         # if not 'passed' == status:
         #     png_name = Utils().take_screenshot()
         #
         #     if Utils().crash_handler():
-        #         print('应用crash，请参考截图信息: http://10.10.99.27:9000/' + time.strftime('%Y%m%d') + '/screenshots/' + png_name ) # + ' 和:  http://10.10.99.87:9000/' + time.strftime('%Y%m%d') + '/' + sce_name + '.log' + ' 对应场景日志信息 ')
+        #         print('应用crash，请参考截图信息: http://10.10.99.27:9000/' + time.strftime('%Y%m%d') + '/screenshots/' + png_name + ' 和:  http://10.10.99.87:9000/' + time.strftime('%Y%m%d') + '/' + sce_name + '.log' + ' 对应场景日志信息 ')
         #     else:
-        #         print('用例运行失败，请参考截图信息: http://10.10.99.27:9000/' + time.strftime('%Y%m%d')+ '/screenshots/' + png_name ) # + ' 和:  http://10.10.99.87:9000/' + time.strftime('%Y%m%d') + '/' + sce_name + '.log' + ' 对应场景日志信息 ')
-        print('场景《' + sce_name + '》执行结束！')
+        #         print('用例运行失败，请参考截图信息: http://10.10.99.27:9000/' + time.strftime('%Y%m%d')+ '/screenshots/' + png_name + ' 和:  http://10.10.99.87:9000/' + time.strftime('%Y%m%d') + '/' + sce_name + '.log' + ' 对应场景日志信息 ')
+        # print('场景《' + sce_name + '》执行结束！')
     # if scenario.status == 'passed':
     #     Utils().del_logcat_file(sce_name + '.log')
     print('=' * 60)

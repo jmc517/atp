@@ -96,3 +96,4 @@ class AppConfig(QWidget):
             self.scriptLocationTxt.setText(str(cf.get('baseconf', 'projectLocation')))
             self.serverIpTxt.setText(str(cf.get('baseconf', 'serverIp')))
             self.serverPortTxt.setText(str(cf.get('baseconf', 'serverPort')))
+

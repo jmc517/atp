@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
 import json
 import os
+import subprocess
+
 import requests
 from configparser import ConfigParser
+
+import time
+
 
 class GetData:
     
@@ -79,12 +84,35 @@ class GetData:
         res = requests.post(self.get_request_url() + '/atp/task/result/save', json=data)
         return res.json()
 
+    # 通过任务ID获取任务历史记录
     def get_task_his_by_id(self, id):
         print(id)
         res = requests.get(self.get_request_url() + '/atp/task/' + str(id))
-        print('-------------------')
+
         print(res.json())
         return res.json()
+
+    # 上传logcat日志到服务器
+    def upload_logcat_file_to_server(self, id):
+        cf = self.get_app_conf()
+        projectPath = str(cf.get('baseconf', 'projectLocation'))
+        atConfigPath = os.path.join(projectPath, 'support', 'config.ini')
+        cf = ConfigParser()
+        cf.read(atConfigPath)
+        log_path = str(cf.get('baseconf', 'logPath'))
+        # 进入到log目录下
+        file_list = os.listdir(log_path)
+        for file in file_list:
+            file_path = os.path.join(log_path, file)
+            if os.path.isfile(file_path):
+                try:
+                    f = open(file_path, 'r', encoding='utf-8')
+                    for line in f:
+                        time.sleep(0.001)
+                        data = {'taskId': str(id), 'fileName': file, 'content': line}
+                        r = requests.post(self.get_request_url() + '/atp/logcat/log', json=data)
+                finally:
+                    f.close()
 
 getter = GetData()
 

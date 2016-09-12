@@ -203,10 +203,10 @@ class MainWidget(QMainWindow):
 
         self.selected_feature_ids = []
 
-        global t_http
-        t_http = threading.Thread(target=self.run_http_server)
-        t_http.setDaemon(True)
-        t_http.start()
+        # global t_http
+        # t_http = threading.Thread(target=self.run_http_server)
+        # t_http.setDaemon(True)
+        # t_http.start()
 
         self.show()
 
@@ -459,6 +459,9 @@ class MainWidget(QMainWindow):
         # os.system('behave  -k --junit --junit-directory ' + reportPath)
         for i in range(int(loopCnt)):
             os.system('behave  -k --show-source --show-timings --format plain --outfile ' + reportPath)
+
+        # 上传logcat日志信息到服务器端
+        print('执行结束,更新任务状态')
         try:
             getter.update_task_status(id)
             file = open(reportPath, 'r', encoding='utf-8').read()
@@ -468,40 +471,41 @@ class MainWidget(QMainWindow):
             raise Exception(e)
         finally:
             self.show_task_history()
+            getter.upload_logcat_file_to_server(id)
 
     # 启动查看报告服务 默认端口 9527
-    def run_http_server(self):
-        cf = getter.get_app_conf()
-        projectPath = str(cf.get('baseconf', 'projectLocation'))
-        reportPath = os.path.join(projectPath, 'reports')
-        # 判断目录不存在创建目录
-        if not os.path.exists(reportPath):
-            os.mkdir(reportPath)
-
-        os.chdir(reportPath)
-        # 先杀掉进程
-        if sys.platform == 'linux':
-            ret = os.popen('netstat -anp | grep 9527').readlines()
-            for r in ret:
-                if '9527' in r:
-                    while '  ' in r:
-                        r = r.replace('  ', ' ')
-
-                    pid = (r.strip().split(' ')[6].split('/')[0])
-                    os.system('kill -9 ' + pid)
-                    break
-            os.system('python3 -m http.server 9527')
-        else:
-            ret = os.popen('netstat -ano | findstr 9527').readlines()
-            for r in ret:
-                if '9527' in r:
-                    while '  ' in r:
-                        r = r.replace('  ', ' ')
-
-                    pid = r.strip().split(' ')[4]
-                    os.system('taskkill /F /pid ' + pid)
-                    break
-            os.system('python -m http.server 9527')
+    # def run_http_server(self):
+    #     cf = getter.get_app_conf()
+    #     projectPath = str(cf.get('baseconf', 'projectLocation'))
+    #     reportPath = os.path.join(projectPath, 'reports')
+    #     # 判断目录不存在创建目录
+    #     if not os.path.exists(reportPath):
+    #         os.mkdir(reportPath)
+    #
+    #     os.chdir(reportPath)
+    #     # 先杀掉进程
+    #     if sys.platform == 'linux':
+    #         ret = os.popen('netstat -anp | grep 9527').readlines()
+    #         for r in ret:
+    #             if '9527' in r:
+    #                 while '  ' in r:
+    #                     r = r.replace('  ', ' ')
+    #
+    #                 pid = (r.strip().split(' ')[6].split('/')[0])
+    #                 os.system('kill -9 ' + pid)
+    #                 break
+    #         os.system('python3 -m http.server 9527')
+    #     else:
+    #         ret = os.popen('netstat -ano | findstr 9527').readlines()
+    #         for r in ret:
+    #             if '9527' in r:
+    #                 while '  ' in r:
+    #                     r = r.replace('  ', ' ')
+    #
+    #                 pid = r.strip().split(' ')[4]
+    #                 os.system('taskkill /F /pid ' + pid)
+    #                 break
+    #         os.system('python -m http.server 9527')
 
     # 打开应用配置
     def showAppConf(self):
@@ -509,6 +513,13 @@ class MainWidget(QMainWindow):
         self.appConfig.initUI()
     # 打开脚本配置
     def showScriptConf(self):
+
+        try:
+            getter.get_app_conf()
+        except Exception as e:
+            self.tipLabel.setText(e)
+            self.tipLabel.setPalette(self.pe_red)
+            return
         self.atConfig = AtConfig()
         self.atConfig.initUI()
 

@@ -5,6 +5,8 @@ import socket
 import subprocess
 import time
 import math
+
+import sys
 from PIL import Image
 import operator
 from functools import reduce
@@ -221,7 +223,8 @@ class Utils:
     # 记录日志信息
     def logcat_to_file(self, sce_name):
         device_num = self.get_conf_value("deviceSerial")
-        log_path = os.path.join(self.get_conf_value('logPath'), time.strftime('%Y%m%d'), sce_name + '.log')
+        # log_path = os.path.join(self.get_conf_value('logPath'), time.strftime('%Y%m%d'), sce_name + '.log')
+        log_path = os.path.join(self.get_conf_value('logPath'), sce_name + '.log')
         log_dir = os.path.dirname(log_path)
 
         if not os.path.exists(log_dir):
@@ -229,12 +232,17 @@ class Utils:
 
         log_cmd = 'adb -s ' + device_num + ' logcat'
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.bind(('localhost', int(self.get_conf_value('socketPort'))))
+        try:
+            s.bind(('localhost', int(self.get_conf_value('socketPort'))))
+        except:
+            pass
         s.listen(10)
         # 开始记录日志
         os.popen(log_cmd + ' -c ')
 
-        p = subprocess.Popen(log_cmd, stdout=open(log_path, 'w'), shell=True, stderr=subprocess.PIPE)
+        file_logcat = open(log_path, 'w', encoding='utf-8')
+
+        p = subprocess.Popen(log_cmd, stdout=file_logcat, shell=True, stderr=subprocess.PIPE)
 
         while True:
             print('waiting for connection...')
@@ -245,13 +253,43 @@ class Utils:
                 data = cs.recv(1024).decode()
                 print('accept data is: %s' %(data,))
                 # p.terminate()
-                p.kill()
+                if sys.platform == 'linux':
+                    subprocess.call('kill -9 ' + str(p.pid), shell=True)
+                    ret = subprocess.Popen('ps -ef | grep logcat', stdout=subprocess.PIPE, shell=True).stdout.readlines()
+                    for r in ret:
+                        r = r.decode().strip()
+                        print(r)
+                        while '  ' in r:
+                            r = r.replace('  ', ' ')
+                        rlist = r.split(' ')
+                        pid = rlist[1]
+                        try:
+                            subprocess.call('kill -9 ' + pid, shell=True)
+                        except:
+                            pass
+
+                else:
+                    subprocess.call('taskkill /F /pid ' + str(p.pid), shell=True)
+                    ret = subprocess.Popen('tasklist -V | findstr logcat', stdout=subprocess.PIPE, shell=True).stdout.readlines()
+                    for r in ret:
+                        r = r.decode().strip()
+                        while '  ' in r:
+                            r = r.replace('  ', ' ')
+                        rlist = r.split(' ')
+                        pid = rlist[1]
+                        try:
+                            subprocess.call('taskkill /T /F /pid ' + pid, shell=True)
+                        except:
+                            pass
+                # p.kill()
                 # time.sleep(10)
                 # if 'passed' == data:
                 #     os.remove(log_path)
                 break
             cs.close()
             break
+        # 文件关闭
+        file_logcat.close()
         s.close()
 
     # 发送记录日志操作

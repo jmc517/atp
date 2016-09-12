@@ -1,7 +1,9 @@
 #!flask/bin/python
 # -*- coding: UTF-8 -*-
+import os
 
 from app import app
+from config import LOGCAT_DIR
 from app import models
 from flask import jsonify, request
 from tools.db_operator import DbOpt, dbOpter
@@ -189,4 +191,21 @@ def get_task_his_by_id(id):
     else:
         data = {'id':task.id, 'status':task.status, 'date_time':task.date_time, 'feature_ids':task.feature_ids, 'result': task.results}
     return jsonify(data)
+
+@app.route('/atp/logcat/log', methods=['POST'])
+def upload_logcat_file():
+    print(request.json)
+    fileName = request.json['fileName']
+    taskId = request.json['taskId']
+    content = request.json['content']
+
+    filePath = os.path.join(LOGCAT_DIR, taskId, fileName)
+    if not os.path.exists(os.path.dirname(filePath)):
+        os.makedirs(os.path.dirname(filePath))
+    try:
+        file = open(filePath, 'a', encoding='UTF-8')
+        file.writelines(content)
+    finally:
+        file.close()
+    return jsonify({})
 

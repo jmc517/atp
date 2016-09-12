@@ -49,6 +49,16 @@ class AtConfig(QWidget):
         self.usbMusicTxt = QLineEdit()
         self.usbMusicTxt.setPlaceholderText('usb音乐播放时展示的音乐名称，英文逗号分隔')
 
+        self.socketIpLabel = QLabel('socketIp: ')
+
+        self.socketIpTxt = QLineEdit()
+        self.socketIpTxt.setPlaceholderText('用于控制logcat日志记录和停止,填写本机地址')
+
+        self.socketPortLabel = QLabel('socketPort: ')
+
+        self.socketPortTxt = QLineEdit()
+        self.socketPortTxt.setPlaceholderText('本地socket端口,不冲突即可')
+
 
         self.okBtn = QPushButton('OK')
         self.okBtn.resize(self.okBtn.sizeHint())
@@ -75,9 +85,13 @@ class AtConfig(QWidget):
         grid.addWidget(self.versionTxt, 7, 1, 1, 3)
         grid.addWidget(self.usbMusicLabel, 8, 0)
         grid.addWidget(self.usbMusicTxt, 8, 1, 1, 3)
-        grid.addWidget(self.okBtn, 9, 3)
-        grid.addWidget(self.cancelBtn, 9, 4)
-        grid.setRowMinimumHeight(10, 30)
+        grid.addWidget(self.socketIpLabel, 9, 0)
+        grid.addWidget(self.socketIpTxt, 9, 1, 1, 3)
+        grid.addWidget(self.socketPortLabel, 10, 0)
+        grid.addWidget(self.socketPortTxt, 10, 1, 1, 3)
+        grid.addWidget(self.okBtn, 11, 3)
+        grid.addWidget(self.cancelBtn, 11, 4)
+        grid.setRowMinimumHeight(12, 30)
 
         self.setLayout(grid)
         self.showConfigs()
@@ -110,6 +124,10 @@ class AtConfig(QWidget):
         file.writelines('\n')
         file.writelines('usbMusic=' + self.usbMusicTxt.text())
         file.writelines('\n')
+        file.writelines('socketIp=' + self.socketIpTxt.text())
+        file.writelines('\n')
+        file.writelines('socketPort=' + self.socketPortTxt.text())
+        file.writelines('\n')
 
         file.close()
 
@@ -123,12 +141,18 @@ class AtConfig(QWidget):
         atConfigPath = os.path.join(projectPath, 'support', 'config.ini')
         cf = ConfigParser()
         cf.read(atConfigPath)
+        try:
+            self.playerTxt.setText(str(cf.get('baseconf', 'player')))
+            self.voiceDirTxt.setText(str(cf.get('baseconf', 'voiceDir')))
+            self.runLogDirTxt.setText(str(cf.get('baseconf', 'logPath')))
+            self.deviceSerialTxt.setText(str(cf.get('baseconf', 'deviceSerial')))
+            self.phoneSerialTxt.setText(str(cf.get('baseconf', 'phoneSerial')))
+            self.phoneBlueToothNameTxt.setText(str(cf.get('baseconf', 'phoneBluetoothName')))
+            self.versionTxt.setText(str(cf.get('baseconf', 'version')))
+            self.usbMusicTxt.setText(str(cf.get('baseconf', 'usbMusic')))
+            self.socketIpTxt.setText(str(cf.get('baseconf', 'socketIp')))
+            self.socketPortTxt.setText(str(cf.get('baseconf', 'socketPort')))
+        except:
+            pass
 
-        self.playerTxt.setText(str(cf.get('baseconf', 'player')))
-        self.voiceDirTxt.setText(str(cf.get('baseconf', 'voiceDir')))
-        self.runLogDirTxt.setText(str(cf.get('baseconf', 'logPath')))
-        self.deviceSerialTxt.setText(str(cf.get('baseconf', 'deviceSerial')))
-        self.phoneSerialTxt.setText(str(cf.get('baseconf', 'phoneSerial')))
-        self.phoneBlueToothNameTxt.setText(str(cf.get('baseconf', 'phoneBluetoothName')))
-        self.versionTxt.setText(str(cf.get('baseconf', 'version')))
-        self.usbMusicTxt.setText(str(cf.get('baseconf', 'usbMusic')))
+

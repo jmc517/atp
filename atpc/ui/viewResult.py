@@ -31,11 +31,16 @@ class ViewResult(QWidget):
         grid = QGridLayout()
 
         closeBtn = QPushButton('关闭')
-        downloadBtn = QPushButton('下载')
+        downloadReportBtn = QPushButton('下载报告')
+        downloadLogBtn = QPushButton('下载日志')
         closeBtn.resize(closeBtn.sizeHint())
-        downloadBtn.resize(downloadBtn.sizeHint())
         closeBtn.clicked.connect(self.close)
-        downloadBtn.clicked.connect(self.downloadLog)
+
+        downloadReportBtn.resize(downloadReportBtn.sizeHint())
+        downloadReportBtn.clicked.connect(self.downloadReport)
+
+        downloadLogBtn.resize(downloadLogBtn.sizeHint())
+        downloadLogBtn.clicked.connect(self.downloadLog)
 
         self.tipLabel = QLabel()
         # self.tipLabel.(QColor(20,150,150))
@@ -45,11 +50,12 @@ class ViewResult(QWidget):
         self.tree = QTreeWidget()
         self.tree.setColumnCount(1)
         self.tree.setHeaderLabels([''])
-        self.tree.setColumnWidth(0, 100)
+        self.tree.setColumnWidth(0, 750)
         self.featureTree = QTreeWidgetItem()
 
-        grid.addWidget(closeBtn, 1, 9)
-        grid.addWidget(downloadBtn, 1, 10)
+        grid.addWidget(closeBtn, 1, 8)
+        grid.addWidget(downloadReportBtn, 1, 9)
+        grid.addWidget(downloadLogBtn, 1, 10)
         grid.addWidget(self.tipLabel, 2, 0, 1, 5)
         grid.addWidget(self.tree, 3, 0, 20, 11)
         self.setLayout(grid)
@@ -112,7 +118,7 @@ class ViewResult(QWidget):
 
         self.tipLabel.setText('全部用例:' + str(total_cnt) + '条, 通过用例:' + str(total_cnt - failed_cnt) + '条, 失败用例:' + str(failed_cnt) + '条')
 
-    def downloadLog(self):
+    def downloadReport(self):
         text, ok = QInputDialog.getText(self, '下载报告', '请输入保存文件路径(含文件名)')
 
         if ok:
@@ -124,6 +130,9 @@ class ViewResult(QWidget):
                     file.writelines(line)
                     file.writelines('\n')
             file.close()
+
+    def downloadLog(self):
+        print(QTreeWidgetItem(self.tree.currentItem()).parent().parent().text(0))
 # app = QApplication(sys.argv)
 # te = ViewResult()
 # te.initUI(14)
