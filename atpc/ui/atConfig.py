@@ -85,10 +85,10 @@ class AtConfig(QWidget):
         grid.addWidget(self.versionTxt, 7, 1, 1, 3)
         grid.addWidget(self.usbMusicLabel, 8, 0)
         grid.addWidget(self.usbMusicTxt, 8, 1, 1, 3)
-        grid.addWidget(self.socketIpLabel, 9, 0)
-        grid.addWidget(self.socketIpTxt, 9, 1, 1, 3)
-        grid.addWidget(self.socketPortLabel, 10, 0)
-        grid.addWidget(self.socketPortTxt, 10, 1, 1, 3)
+        # grid.addWidget(self.socketIpLabel, 9, 0)
+        # grid.addWidget(self.socketIpTxt, 9, 1, 1, 3)
+        # grid.addWidget(self.socketPortLabel, 10, 0)
+        # grid.addWidget(self.socketPortTxt, 10, 1, 1, 3)
         grid.addWidget(self.okBtn, 11, 3)
         grid.addWidget(self.cancelBtn, 11, 4)
         grid.setRowMinimumHeight(12, 30)
@@ -124,10 +124,10 @@ class AtConfig(QWidget):
         file.writelines('\n')
         file.writelines('usbMusic=' + self.usbMusicTxt.text())
         file.writelines('\n')
-        file.writelines('socketIp=' + self.socketIpTxt.text())
-        file.writelines('\n')
-        file.writelines('socketPort=' + self.socketPortTxt.text())
-        file.writelines('\n')
+        # file.writelines('socketIp=' + self.socketIpTxt.text())
+        # file.writelines('\n')
+        # file.writelines('socketPort=' + self.socketPortTxt.text())
+        # file.writelines('\n')
 
         file.close()
 
@@ -150,8 +150,8 @@ class AtConfig(QWidget):
             self.phoneBlueToothNameTxt.setText(str(cf.get('baseconf', 'phoneBluetoothName')))
             self.versionTxt.setText(str(cf.get('baseconf', 'version')))
             self.usbMusicTxt.setText(str(cf.get('baseconf', 'usbMusic')))
-            self.socketIpTxt.setText(str(cf.get('baseconf', 'socketIp')))
-            self.socketPortTxt.setText(str(cf.get('baseconf', 'socketPort')))
+            # self.socketIpTxt.setText(str(cf.get('baseconf', 'socketIp')))
+            # self.socketPortTxt.setText(str(cf.get('baseconf', 'socketPort')))
         except:
             pass
 
