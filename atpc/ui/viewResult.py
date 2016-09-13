@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import subprocess
 import sys
 
 from PyQt5.QtGui import QBrush
@@ -7,6 +8,8 @@ from PyQt5.QtGui import QColor
 from PyQt5.QtGui import QFont
 from PyQt5.QtGui import QIcon
 import webbrowser as web
+
+from PyQt5.QtGui import QPalette
 from PyQt5.QtWidgets import QGridLayout
 from PyQt5.QtWidgets import QInputDialog
 from PyQt5.QtWidgets import QLabel
@@ -47,16 +50,27 @@ class ViewResult(QWidget):
         self.tipLabel.setFont(QFont('sanserif', 12))
         self.tipLabel.setText('')
 
+
+
+        self.errMsgLabel = QLabel()
+        self.errMsgLabel.setFont(QFont('sanserif', 16))
+        self.errMsgLabel.setText('')
+        self.pe_red = QPalette()
+        self.pe_red.setColor(QPalette.WindowText, Qt.Qt.red)
+        self.errMsgLabel.setPalette(self.pe_red)
+
         self.tree = QTreeWidget()
         self.tree.setColumnCount(1)
         self.tree.setHeaderLabels([''])
         self.tree.setColumnWidth(0, 750)
         self.featureTree = QTreeWidgetItem()
 
+
         grid.addWidget(closeBtn, 1, 8)
         grid.addWidget(downloadReportBtn, 1, 9)
         grid.addWidget(downloadLogBtn, 1, 10)
         grid.addWidget(self.tipLabel, 2, 0, 1, 5)
+        grid.addWidget(self.errMsgLabel, 2, 5, 1, 3)
         grid.addWidget(self.tree, 3, 0, 20, 11)
         self.setLayout(grid)
 
@@ -70,7 +84,7 @@ class ViewResult(QWidget):
         result = res['result']
 
         if len(result) == 0:
-            self.tipLabel.setText('没有生成报告，请确定是否执行结束')
+            self.errMsgLabel.setText('没有生成报告，请确定是否执行结束')
             return
 
         step_flag = None
@@ -132,7 +146,30 @@ class ViewResult(QWidget):
             file.close()
 
     def downloadLog(self):
-        print(QTreeWidgetItem(self.tree.currentItem()).parent().parent().text(0))
+        print(self.tree.currentItem())
+        if self.tree.currentItem() == None:
+            self.errMsgLabel.setText('请选中要下载日志的用例')
+            return
+
+        self.errMsgLabel.setText('')
+        text, ok = QInputDialog.getText(self, '下载日志', '请输入保存日志目录')
+        if ok:
+
+            item = QTreeWidgetItem(self.tree.currentItem())
+
+            while type(item.parent()).__name__ != 'NoneType':
+                item = item.parent()
+
+            logcat_file_name = os.path.join(text,item.text(0) + '.log')
+
+            print('要下载的日志为' + logcat_file_name + ', 任务ID为: ' + str(self.taskid) + ', 下载路径为: ' + text)
+            # os.chdir(text)
+            cf = getter.get_app_conf()
+
+            logcat_url = 'http://' + str(cf.get('baseconf', 'serverIp')) + ':9527/' + str(self.taskid) + '/' + logcat_file_name
+            subprocess.call('wget ' + logcat_url + ' --output-document=' + logcat_file_name, shell=True)
+
+
 # app = QApplication(sys.argv)
 # te = ViewResult()
 # te.initUI(14)

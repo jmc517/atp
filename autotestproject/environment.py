@@ -83,11 +83,13 @@ def after_scenario(context, scenario):
         # t._stop()
         # t.join()
         Utils().send_logcat_flag(status)
-        t_logcat._stop()
-        t_logcat.join()
+
     except Exception as e:
         print(e)
-    # finally:
+    finally:
+        t_logcat._stop()
+        t_logcat.join()
+
         # if not 'passed' == status:
         #     png_name = Utils().take_screenshot()
         #
@@ -95,7 +97,7 @@ def after_scenario(context, scenario):
         #         print('应用crash，请参考截图信息: http://10.10.99.27:9000/' + time.strftime('%Y%m%d') + '/screenshots/' + png_name + ' 和:  http://10.10.99.87:9000/' + time.strftime('%Y%m%d') + '/' + sce_name + '.log' + ' 对应场景日志信息 ')
         #     else:
         #         print('用例运行失败，请参考截图信息: http://10.10.99.27:9000/' + time.strftime('%Y%m%d')+ '/screenshots/' + png_name + ' 和:  http://10.10.99.87:9000/' + time.strftime('%Y%m%d') + '/' + sce_name + '.log' + ' 对应场景日志信息 ')
-        # print('场景《' + sce_name + '》执行结束！')
+        print('场景《' + sce_name + '》执行结束！')
     # if scenario.status == 'passed':
     #     Utils().del_logcat_file(sce_name + '.log')
     print('=' * 60)
