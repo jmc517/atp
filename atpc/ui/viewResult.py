@@ -160,6 +160,9 @@ class ViewResult(QWidget):
             while type(item.parent()).__name__ != 'NoneType':
                 item = item.parent()
 
+            if not os.path.exists(text):
+                os.makedirs(text)
+
             logcat_file_name = os.path.join(text,item.text(0) + '.log')
 
             print('要下载的日志为' + logcat_file_name + ', 任务ID为: ' + str(self.taskid) + ', 下载路径为: ' + text)

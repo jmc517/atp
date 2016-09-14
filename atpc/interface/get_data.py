@@ -106,11 +106,13 @@ class GetData:
             file_path = os.path.join(log_path, file)
             if os.path.isfile(file_path):
                 try:
-                    f = open(file_path, 'r', encoding='utf-8')
+                    f = open(file_path, 'r',encoding='utf-8')
                     for line in f:
                         time.sleep(0.001)
                         data = {'taskId': str(id), 'fileName': file, 'content': line}
                         r = requests.post(self.get_request_url() + '/atp/logcat/log', json=data)
+                except:
+                    pass
                 finally:
                     f.close()
 

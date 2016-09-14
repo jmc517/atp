@@ -386,7 +386,7 @@ class MainWidget(QMainWindow):
         for id in self.selected_feature_ids:
             fileName = os.path.join(featurePath, 'testcase-' + datetime.now().strftime('%Y_%m_%d%H_%M_%S_%f') + '.feature')
             print('要写入的文件为: ' + fileName)
-            file = open(fileName, 'w')
+            file = open(fileName, 'w', encoding='utf-8')
             print('写入文件的场景ID为: ' + str(id))
             # 根据id 获取场景的feature_name and sce_name
             feature = getter.get_feature_info_by_id(id)
@@ -464,7 +464,7 @@ class MainWidget(QMainWindow):
         print('执行结束,更新任务状态')
         try:
             getter.update_task_status(id)
-            file = open(reportPath, 'r', encoding='utf-8').read()
+            file = open(reportPath, 'r').read()
             data = {'id': id, 'result': file}
             getter.save_result_to_task_his(data)
         except Exception as e:

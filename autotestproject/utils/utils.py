@@ -123,12 +123,14 @@ class Utils:
 
         command = 'adb devices'
 
-        res = os.popen(command).read()
+        #res = os.popen(command).read()
+        res = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True).stdout.readlines()
 
-        for s in res.split('\n'):
+        for s in res:
+            s = s.decode().strip()
             # 跳过第一行
-            if s.__contains__('devices'):
-                continue
+            # if s.__contains__('devices'):
+            #     continue
 
             # if s.__contains__('device'):
             #     serial = str(s.replace('device','').replace(' ','')).strip()
@@ -239,7 +241,7 @@ class Utils:
 
         file_logcat = open(log_path, 'w', encoding='utf-8')
 
-        p_logcat = subprocess.Popen(log_cmd, stdout=file_logcat, shell=True, stderr=subprocess.PIPE)
+        p_logcat = subprocess.Popen(log_cmd, stdout=file_logcat, stderr=subprocess.PIPE)
         self.set_context_map('file_logcat', file_logcat)
         self.set_context_map('p_logcat', p_logcat)
 
@@ -250,36 +252,42 @@ class Utils:
             print('关闭文件')
             self.get_context_map('file_logcat').close()
 
-        print(self.get_context_map('p_logcat').pid)
-        if sys.platform == 'linux':
+        if self.get_context_map('p_logcat'):
             print('杀掉进程')
-            subprocess.call('kill -9 ' + str(self.get_context_map('p_logcat').pid), shell=True)
-            ret = subprocess.Popen('ps -ef | grep logcat', stdout=subprocess.PIPE, shell=True).stdout.readlines()
-            for r in ret:
-                r = r.decode().strip()
-                print(r)
-                while '  ' in r:
-                    r = r.replace('  ', ' ')
-                rlist = r.split(' ')
-                pid = rlist[1]
-                try:
-                    subprocess.call('kill -9 ' + pid, shell=True)
-                except:
-                    pass
-        else:
-            subprocess.call('taskkill /F /pid ' + str(self.get_context_map('p_logcat').pid), shell=True)
-            ret = subprocess.Popen('tasklist -V | findstr logcat', stdout=subprocess.PIPE,
-                                   shell=True).stdout.readlines()
-            for r in ret:
-                r = r.decode().strip()
-                while '  ' in r:
-                    r = r.replace('  ', ' ')
-                rlist = r.split(' ')
-                pid = rlist[1]
-                try:
-                    subprocess.call('taskkill /T /F /pid ' + pid, shell=True)
-                except:
-                    pass
+            self.get_context_map('p_logcat').terminate()
+        # if sys.platform == 'linux':
+        #     print('杀掉进程')
+        #     self.get_context_map('p_logcat').terminate()
+            # subprocess.call('kill -9 ' + str(self.get_context_map('p_logcat').pid), shell=True)
+            # ret = subprocess.Popen('ps -ef | grep logcat', stdout=subprocess.PIPE, shell=True).stdout.readlines()
+            # for r in ret:
+            #     r = r.decode().strip()
+            #     print(r)
+            #     while '  ' in r:
+            #         r = r.replace('  ', ' ')
+            #     rlist = r.split(' ')
+            #     pid = rlist[1]
+            #     try:
+            #         subprocess.call('kill -9 ' + pid, shell=True)
+            #     except:
+            #         pass
+        # else:
+        #     print('杀掉进程')
+            # subprocess.call('taskkill /F /pid ' + str(self.get_context_map('p_logcat').pid), shell=True)
+            # self.get_context_map('p_logcat').terminate()
+            # ret = subprocess.Popen('tasklist -V | findstr adb', stdout=subprocess.PIPE, shell=True).stdout.readlines()
+            # for r in ret:
+            #     r = r.decode('unicode_escape').strip()
+            #     while '  ' in r:
+            #         r = r.replace('  ', ' ')
+            #     rlist = r.split(' ')
+            #     pid = rlist[1]
+            #     try:
+            #         if rlist[6] == 'Unknown':
+            #             print(rlist[1])
+            #             subprocess.call('taskkill /T /F /pid ' + pid, shell=True)
+            #     except:
+            #         pass
 
     # 获取wifi连接状态
     # true 连接

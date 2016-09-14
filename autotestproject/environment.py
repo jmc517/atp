@@ -5,6 +5,8 @@ import threading
 
 import time
 
+import sys
+
 from actions.common import Common
 from actions.launcher import Launcher
 from actions.navi import Navi
@@ -39,7 +41,10 @@ def before_all(context):
 
     # 清空logcat日志记录
     log_path = Utils().get_conf_value('logPath')
-    subprocess.call('rm -rf ' + log_path, shell=True)
+    if sys.platform == 'linux':
+        subprocess.call('rm -rf ' + log_path, shell=True)
+    else:
+        subprocess.call('rd /q/s ' + log_path, shell=True)
 
 # 场景前处理
 # 每个场景之前确保设备在主界面
