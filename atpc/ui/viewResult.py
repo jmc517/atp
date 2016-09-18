@@ -1,19 +1,18 @@
 # -*- coding: utf-8 -*-
 import os
 import subprocess
-import sys
 
+from urllib.parse import quote
 from PyQt5.QtGui import QBrush
 from PyQt5.QtGui import QColor
 from PyQt5.QtGui import QFont
 from PyQt5.QtGui import QIcon
-import webbrowser as web
 
 from PyQt5.QtGui import QPalette
 from PyQt5.QtWidgets import QGridLayout
 from PyQt5.QtWidgets import QInputDialog
 from PyQt5.QtWidgets import QLabel
-from PyQt5.QtWidgets import QPushButton, QTextEdit
+from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtWidgets import QTreeWidget
 from PyQt5.QtWidgets import QTreeWidgetItem
 from PyQt5.QtWidgets import QWidget
@@ -162,14 +161,15 @@ class ViewResult(QWidget):
 
             if not os.path.exists(text):
                 os.makedirs(text)
-
-            logcat_file_name = os.path.join(text,item.text(0) + '.log')
+            log_name = item.text(0) + '.log'
+            logcat_file_name = os.path.join(text, log_name)
 
             print('要下载的日志为' + logcat_file_name + ', 任务ID为: ' + str(self.taskid) + ', 下载路径为: ' + text)
             # os.chdir(text)
             cf = getter.get_app_conf()
 
-            logcat_url = 'http://' + str(cf.get('baseconf', 'serverIp')) + ':9527/' + str(self.taskid) + '/' + logcat_file_name
+            logcat_url = 'http://' + str(cf.get('baseconf', 'serverIp')) + ':9527/' + str(self.taskid) + '/' + quote(log_name)
+            print(logcat_url)
             subprocess.call('wget ' + logcat_url + ' --output-document=' + logcat_file_name, shell=True)
 
 

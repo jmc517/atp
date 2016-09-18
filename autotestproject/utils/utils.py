@@ -240,8 +240,11 @@ class Utils:
         os.popen(log_cmd + ' -c ')
 
         file_logcat = open(log_path, 'w', encoding='utf-8')
+        if sys.platform == 'linux':
+            p_logcat = subprocess.Popen(log_cmd, stdout=file_logcat, stderr=subprocess.PIPE, shell=True)
+        else:
+            p_logcat = subprocess.Popen(log_cmd, stdout=file_logcat, stderr=subprocess.PIPE)
 
-        p_logcat = subprocess.Popen(log_cmd, stdout=file_logcat, stderr=subprocess.PIPE)
         self.set_context_map('file_logcat', file_logcat)
         self.set_context_map('p_logcat', p_logcat)
 
@@ -252,26 +255,26 @@ class Utils:
             print('关闭文件')
             self.get_context_map('file_logcat').close()
 
-        if self.get_context_map('p_logcat'):
+
+        if sys.platform == 'linux':
             print('杀掉进程')
-            self.get_context_map('p_logcat').terminate()
-        # if sys.platform == 'linux':
-        #     print('杀掉进程')
-        #     self.get_context_map('p_logcat').terminate()
-            # subprocess.call('kill -9 ' + str(self.get_context_map('p_logcat').pid), shell=True)
-            # ret = subprocess.Popen('ps -ef | grep logcat', stdout=subprocess.PIPE, shell=True).stdout.readlines()
-            # for r in ret:
-            #     r = r.decode().strip()
-            #     print(r)
-            #     while '  ' in r:
-            #         r = r.replace('  ', ' ')
-            #     rlist = r.split(' ')
-            #     pid = rlist[1]
-            #     try:
-            #         subprocess.call('kill -9 ' + pid, shell=True)
-            #     except:
-            #         pass
-        # else:
+            # self.get_context_map('p_logcat').terminate()
+            subprocess.call('kill -9 ' + str(self.get_context_map('p_logcat').pid), shell=True)
+            ret = subprocess.Popen('ps -ef | grep logcat', stdout=subprocess.PIPE, shell=True).stdout.readlines()
+            for r in ret:
+                r = r.decode().strip()
+                while '  ' in r:
+                    r = r.replace('  ', ' ')
+                rlist = r.split(' ')
+                pid = rlist[1]
+                try:
+                    subprocess.call('kill -9 ' + pid, shell=True)
+                except:
+                    pass
+        else:
+            if self.get_context_map('p_logcat'):
+                print('杀掉进程')
+                self.get_context_map('p_logcat').terminate()
         #     print('杀掉进程')
             # subprocess.call('taskkill /F /pid ' + str(self.get_context_map('p_logcat').pid), shell=True)
             # self.get_context_map('p_logcat').terminate()
