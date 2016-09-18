@@ -24,20 +24,19 @@ def before_all(context):
     if not Utils().check_is_connected(serialNum):
         Utils().raise_Exception_info('车机没有连接请检查')
     print('设备已经连接')
-    phone_serialNum = Utils().get_conf_value('phoneSerial')
-    if not Utils().get_wifi_conn_status():
-        Common().connect_special_wifi('WiFiTEST', '123454321')
+    # phone_serialNum = Utils().get_conf_value('phoneSerial')
+    # if not Utils().get_wifi_conn_status():
+    #     Common().connect_special_wifi('WiFiTEST', '123454321')
     # 链接设备大于1个时候连接蓝牙
-    if Utils().check_is_connected(phone_serialNum):
-        print('连接蓝牙设备')
-        # Utils().connect_bluetooth()
-        Common().back_to_launcher()
-        Launcher().click_system_setting_ele()
-        SysSetting().click_syssetting_menu_net_ele()
-        SysSetting().click_syssetting_bluetooth_ele()
-        flag = SysSetting().connect_syssetting_special_bluetooth(Utils().get_conf_value('phoneBluetoothName'))
-        if not flag:
-            Phone().click_pair_ele()
+    # if Utils().check_is_connected(phone_serialNum):
+    #     print('连接蓝牙设备')
+        # Common().back_to_launcher()
+        # Launcher().click_system_setting_ele()
+        # SysSetting().click_syssetting_menu_net_ele()
+        # SysSetting().click_syssetting_bluetooth_ele()
+        # flag = SysSetting().connect_syssetting_special_bluetooth(Utils().get_conf_value('phoneBluetoothName'))
+        # if not flag:
+        #     Phone().click_pair_ele()
 
     # 清空logcat日志记录
     log_path = Utils().get_conf_value('logPath')
@@ -57,11 +56,11 @@ def before_scenario(context, scenario):
     # t = threading.Thread(target=Utils().get_top_info_to_file,args=(sce_name,))
     # t.setDaemon(True)
     # t.start()
-    print('开始记录logcat日志信息')
-    global t_logcat
-    t_logcat = threading.Thread(target=Utils().logcat_to_file, args=(sce_name,))
-    t_logcat.setDaemon(True)
-    t_logcat.start()
+    # print('开始记录logcat日志信息')
+    # global t_logcat
+    # t_logcat = threading.Thread(target=Utils().logcat_to_file, args=(sce_name,))
+    # t_logcat.setDaemon(True)
+    # t_logcat.start()
     print('执行场景前处理，回到主界面')
     try:
         Common().back_to_launcher()
@@ -87,13 +86,14 @@ def after_scenario(context, scenario):
     try:
         # t._stop()
         # t.join()
-        Utils().send_logcat_flag(status)
+        # Utils().send_logcat_flag(status)
+        print(' ')
 
     except Exception as e:
         print(e)
     finally:
-        t_logcat._stop()
-        t_logcat.join()
+        # t_logcat._stop()
+        # t_logcat.join()
 
         # if not 'passed' == status:
         #     png_name = Utils().take_screenshot()

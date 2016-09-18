@@ -471,7 +471,8 @@ class MainWidget(QMainWindow):
             raise Exception(e)
         finally:
             self.show_task_history()
-            getter.upload_logcat_file_to_server(id)
+            # 日志上传暂时停用,日志太多容易引起阻塞
+            # getter.upload_logcat_file_to_server(id)
 
     # 启动查看报告服务 默认端口 9527
     # def run_http_server(self):

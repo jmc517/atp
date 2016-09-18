@@ -68,7 +68,7 @@ class ViewResult(QWidget):
 
         grid.addWidget(closeBtn, 1, 8)
         grid.addWidget(downloadReportBtn, 1, 9)
-        grid.addWidget(downloadLogBtn, 1, 10)
+        # grid.addWidget(downloadLogBtn, 1, 10) # 日志下载暂时停用
         grid.addWidget(self.tipLabel, 2, 0, 1, 5)
         grid.addWidget(self.errMsgLabel, 2, 5, 1, 3)
         grid.addWidget(self.tree, 3, 0, 20, 11)
