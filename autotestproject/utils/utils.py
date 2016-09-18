@@ -241,9 +241,9 @@ class Utils:
 
         file_logcat = open(log_path, 'w', encoding='utf-8')
         if sys.platform == 'linux':
-            p_logcat = subprocess.Popen(log_cmd, stdout=file_logcat, stderr=subprocess.PIPE, shell=True)
+            p_logcat = subprocess.Popen(log_cmd + ' *:D', stdout=file_logcat, stderr=subprocess.PIPE, shell=True)
         else:
-            p_logcat = subprocess.Popen(log_cmd, stdout=file_logcat, stderr=subprocess.PIPE)
+            p_logcat = subprocess.Popen(log_cmd + ' *:D', stdout=file_logcat, stderr=subprocess.PIPE)
 
         self.set_context_map('file_logcat', file_logcat)
         self.set_context_map('p_logcat', p_logcat)
@@ -254,7 +254,6 @@ class Utils:
         if self.get_context_map('file_logcat'):
             print('关闭文件')
             self.get_context_map('file_logcat').close()
-
 
         if sys.platform == 'linux':
             print('杀掉进程')

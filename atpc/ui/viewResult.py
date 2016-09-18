@@ -27,7 +27,8 @@ class ViewResult(QWidget):
     def initUI(self, id):
         self.setWindowTitle('结果查看')
         self.setWindowIcon(QIcon('./images/icon.jpg'))
-        self.setGeometry(10, 10, 1024, 800)
+        # self.setGeometry(10, 10, 1024, 800)
+        self.setMaximumSize()
         self.setWindowFlags(Qt.Qt.SubWindow)
         self.taskid = id
         grid = QGridLayout()

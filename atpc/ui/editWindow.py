@@ -29,10 +29,11 @@ class EditWindow(QWidget):
         self.feature_steps_info = []
         self.feature_info = {}
 
-        self.setGeometry(10, 10, 1024, 768)
+        # self.setGeometry(10, 10, 1024, 768)
         self.setWindowTitle('编辑用例')
         self.setWindowIcon(QIcon('./images/icon.jpg'))
         self.setWindowFlags(Qt.Qt.SubWindow)
+        self.setMaximumSize()
 
         grid = QGridLayout()
 
