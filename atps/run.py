@@ -7,11 +7,11 @@ import os
 
 import sys
 
-from config import LOGCAT_DIR
+# from config import LOGCAT_DIR
 from app import app
 def start_http_server():
 
-    os.chdir(LOGCAT_DIR)
+    # os.chdir(LOGCAT_DIR)
     # 先杀掉进程
     if sys.platform == 'linux':
         # ret = os.popen('netstat -anp | grep 9527').readlines()
@@ -42,11 +42,11 @@ def start_http_server():
         subprocess.call('python -m http.server 9527', shell=True)
 
 #判断logcat目录是否存在,不存在则创建目录
-if not os.path.exists(LOGCAT_DIR):
-    os.makedirs(LOGCAT_DIR)
-
-t = threading.Thread(target=start_http_server)
-t.setDaemon(True)
-t.start()
+# if not os.path.exists(LOGCAT_DIR):
+#     os.makedirs(LOGCAT_DIR)
+#
+# t = threading.Thread(target=start_http_server)
+# t.setDaemon(True)
+# t.start()
 
 app.run(host='10.10.99.30', debug=True)
