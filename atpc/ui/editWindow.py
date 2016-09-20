@@ -29,11 +29,11 @@ class EditWindow(QWidget):
         self.feature_steps_info = []
         self.feature_info = {}
 
-        # self.setGeometry(10, 10, 1024, 768)
+        self.setGeometry(10, 10, 900, 600)
         self.setWindowTitle('编辑用例')
         self.setWindowIcon(QIcon('./images/icon.jpg'))
         self.setWindowFlags(Qt.Qt.SubWindow)
-        self.setMaximumSize()
+        # self.setMaximumSize()
 
         grid = QGridLayout()
 
@@ -210,6 +210,12 @@ class EditWindow(QWidget):
     # 上移步骤
     def up_step_in_feature(self):
         idx = self.featureview.currentRow()
+
+        if idx == -1:
+            self.tipLabel.setText('请选中要移动的步骤')
+            self.tipLabel.setPalette(self.pe_red)
+            return
+        self.tipLabel.setText('')
         if idx == 0:
             return
         tmp = self.feature_steps_info[idx]
@@ -222,10 +228,12 @@ class EditWindow(QWidget):
 
     # 下移步骤
     def down_step_in_feature(self):
+
         idx = self.featureview.currentRow()
         count = self.featureview.rowCount()
         if idx == count - 1:
             return
+
         tmp = self.feature_steps_info[idx]
         self.feature_steps_info.pop(idx)
         self.feature_steps_info.insert(idx + 1, tmp)
@@ -273,6 +281,7 @@ class EditWindow(QWidget):
         for i in range(len(self.feature_steps_info)):
             self.featureview.insertRow(i)
             self.featureview.setItem(i, 0, QTableWidgetItem(self.feature_steps_info[i]['name']))
+        self.tipLabel.setText('')
 
     #     保存feature
     def save_feature(self):

@@ -27,8 +27,8 @@ class ViewResult(QWidget):
     def initUI(self, id):
         self.setWindowTitle('结果查看')
         self.setWindowIcon(QIcon('./images/icon.jpg'))
-        # self.setGeometry(10, 10, 1024, 800)
-        self.setMaximumSize()
+        self.setGeometry(10, 10, 900, 800)
+        # self.setMaximumSize()
         self.setWindowFlags(Qt.Qt.SubWindow)
         self.taskid = id
         grid = QGridLayout()
@@ -66,8 +66,8 @@ class ViewResult(QWidget):
         self.featureTree = QTreeWidgetItem()
 
 
-        grid.addWidget(closeBtn, 1, 8)
-        grid.addWidget(downloadReportBtn, 1, 9)
+        grid.addWidget(closeBtn, 1, 9)
+        grid.addWidget(downloadReportBtn, 1, 10)
         # grid.addWidget(downloadLogBtn, 1, 10) # 日志下载暂时停用
         grid.addWidget(self.tipLabel, 2, 0, 1, 5)
         grid.addWidget(self.errMsgLabel, 2, 5, 1, 3)

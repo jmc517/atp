@@ -90,7 +90,7 @@ class MainWidget(QMainWindow):
         self.loopSpinbox = QSpinBox()
         self.loopLabel.setFont(QFont('sanserif', 18))
 
-        self.loopSpinbox.setRange(1, 1000)
+        self.loopSpinbox.setRange(1, 5000)
         self.loopSpinbox.setValue(1)
         self.loopSpinbox.setFont(QFont('sanserif', 18))
 
@@ -190,7 +190,7 @@ class MainWidget(QMainWindow):
         # self.setLayout(grid)
         self.setCentralWidget(tmpLabel)
 
-        self.setGeometry(100, 100, 1440, 800)
+        self.setGeometry(10, 10, 1024, 800)
         self.setWindowTitle('QGATP')
         self.setWindowIcon(QIcon('./images/icon.jpg'))
         try:
