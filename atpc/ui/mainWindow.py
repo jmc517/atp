@@ -190,7 +190,7 @@ class MainWidget(QMainWindow):
         # self.setLayout(grid)
         self.setCentralWidget(tmpLabel)
 
-        self.setGeometry(10, 10, 1024, 800)
+        self.setGeometry(30, 30, 1366, 800)
         self.setWindowTitle('QGATP')
         self.setWindowIcon(QIcon('./images/icon.jpg'))
         try:
