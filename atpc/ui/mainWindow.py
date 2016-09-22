@@ -99,6 +99,16 @@ class MainWidget(QMainWindow):
         self.runBtn.setDisabled(True)
         self.runBtn.clicked.connect(self.run_tests)
 
+        selectAllBtn = QPushButton('全选')
+        selectAllBtn.resize(selectAllBtn.sizeHint())
+        selectAllBtn.setFont(QFont('sanserif', 8))
+        selectAllBtn.clicked.connect(self.selectAllFeatures)
+
+        inverseAllBtn = QPushButton('反选')
+        inverseAllBtn.resize(selectAllBtn.sizeHint())
+        inverseAllBtn.setFont(QFont('sanserif', 8))
+        inverseAllBtn.clicked.connect(self.inverseAllFeatures)
+
         addBtn = QPushButton('添加')
         addBtn.resize(addBtn.sizeHint())
         addBtn.setFont(QFont('sanserif', 8))
@@ -174,6 +184,8 @@ class MainWidget(QMainWindow):
 
         grid.addWidget(featureLabel, 5, 1)
         grid.addWidget(self.tipLabel, 5, 2, 1, 6)
+        grid.addWidget(selectAllBtn, 5, 15)
+        grid.addWidget(inverseAllBtn, 5, 16)
         grid.addWidget(addBtn, 5, 17)
         grid.addWidget(self.delBtn, 5, 18)
         grid.addWidget(refreshBtn, 5, 19)
@@ -190,7 +202,7 @@ class MainWidget(QMainWindow):
         # self.setLayout(grid)
         self.setCentralWidget(tmpLabel)
 
-        self.setGeometry(30, 30, 1366, 800)
+        self.setGeometry(30, 30, 1420, 800)
         self.setWindowTitle('QGATP')
         self.setWindowIcon(QIcon('./images/icon.jpg'))
         try:
@@ -327,7 +339,6 @@ class MainWidget(QMainWindow):
     # 选中feature
     def check_features(self, item):
         it = self.featureTable.item(item.row(), 0)
-
         if item.column() == 0:
             # 获取选中的feature id
             self.selected_feature_ids.clear()
@@ -508,6 +519,33 @@ class MainWidget(QMainWindow):
     #                 break
     #         os.system('python -m http.server 9527')
 
+    def selectAllFeatures(self):
+        rowCnt = self.featureTable.rowCount()
+        if rowCnt == 0:
+            return
+        for i in range(rowCnt):
+            # self.featureTable.setCurrentItem(QTableWidgetItem(self.featureTable.itemAt(i+1,0)))
+            item = self.featureTable.item(i, 0)
+            if not item.checkState() == Qt.Checked:
+                # item.setCheckState(Qt.Unchecked)
+                item.setCheckState(Qt.Checked)
+            if i == rowCnt - 1:
+                self.check_features(item)
+
+    def inverseAllFeatures(self):
+        rowCnt = self.featureTable.rowCount()
+        if rowCnt == 0:
+            return
+        for i in range(rowCnt):
+            # self.featureTable.setCurrentItem(QTableWidgetItem(self.featureTable.itemAt(i+1,0)))
+            item = self.featureTable.item(i, 0)
+            if item.checkState() == Qt.Checked:
+                item.setCheckState(Qt.Unchecked)
+            else:
+                item.setCheckState(Qt.Checked)
+
+            if i == rowCnt - 1:
+                self.check_features(item)
     # 打开应用配置
     def showAppConf(self):
         self.appConfig = AppConfig()
