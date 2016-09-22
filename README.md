@@ -136,6 +136,3 @@ multibyte sequence
 > 打开错误中指定的文件runner.py在303行附近修改如下代码  
 > with open(filename) as f:改为 with open(filename, encoding='utf-8') as f:
 
-##联系我们
-Email：guangqianou@pateo.com.cn(欧光乾)， zhiyuanwang@pateo.com.cn(王志远)
-
